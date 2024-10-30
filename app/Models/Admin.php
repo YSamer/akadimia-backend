@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Admin extends Authenticatable
+class Admin extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\AdminFactory> */
     use HasApiTokens, HasFactory, Notifiable;
@@ -24,6 +24,7 @@ class Admin extends Authenticatable
         'phone',
         'gender',
         'birth_date',
+        'password',
     ];
 
     /**

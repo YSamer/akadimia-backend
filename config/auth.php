@@ -40,7 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-
+        'admin-session' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
         'user' => [
             'driver' => 'sanctum',
             'provider' => 'users',
@@ -112,7 +115,7 @@ return [
         ],
         'admins' => [
             'provider' => 'admins',
-            'table' => 'admin_password_reset_tokens',
+            'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ],
