@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('batch_id');
             $table->string('name');
-            $table->string('image')->nullable(); // صورة المجموعة
+            $table->string('image')->nullable();
             $table->timestamps();
 
             $table->foreign('batch_id')->references('id')->on('batches')->onDelete('cascade');

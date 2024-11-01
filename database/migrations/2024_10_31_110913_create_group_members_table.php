@@ -10,14 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('wirds', function (Blueprint $table) {
+        Schema::create('group_members', function (Blueprint $table) {
             $table->id();
             $table->foreignId('group_id')->constrained()->onDelete('cascade');
-            $table->date('date');
-            $table->enum('type', config('wird.types'));
-            $table->integer('amount')->comment('المقدار');
-            $table->decimal('score', 9, 2)->nullable();
+            $table->unsignedBigInteger('member_id');
+            $table->string('member_type');
             $table->timestamps();
+
+            $table->index(['member_id', 'member_type']);
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('wirds');
+        Schema::dropIfExists('group_members');
     }
 };

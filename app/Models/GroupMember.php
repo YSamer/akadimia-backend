@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class WirdDone extends Model
+class GroupMember extends Model
 {
     use HasFactory;
 
@@ -15,10 +15,9 @@ class WirdDone extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_id',
-        'wird_id',
-        'is_completed',
-        'score',
+        'group_id',
+        'member_id',
+        'member_type',
     ];
 
     /**
@@ -27,29 +26,27 @@ class WirdDone extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'user_id' => 'integer',
-        'wird_id' => 'integer',
-        'is_completed' => 'boolean',
-        'score' => 'decimal:2',
+        'group_id' => 'integer',
+        'member_id' => 'integer',
     ];
 
     /**
-     * Get the user that completed the wird.
+     * Get the owning member model (User or Admin).
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function user()
+    public function member()
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
     }
 
     /**
-     * Get the wird associated with this completion record.
+     * Get the group that the member belongs to.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function wird()
+    public function group()
     {
-        return $this->belongsTo(Wird::class);
+        return $this->belongsTo(Group::class);
     }
 }

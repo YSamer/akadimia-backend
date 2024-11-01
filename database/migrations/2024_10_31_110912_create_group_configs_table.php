@@ -14,8 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('group_id');
             $table->enum('type', config('wird.types'));
-            $table->integer('amount'); // مقدار الورد (مثال: عدد الصفحات أو الآيات)
-            $table->string('days'); // الأيام المحددة لهذا الورد (مثال: "الأحد, الاثنين")
+            $table->integer('amount');
             $table->timestamps();
 
             $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');

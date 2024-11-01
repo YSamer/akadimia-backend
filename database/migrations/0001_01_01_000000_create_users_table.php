@@ -18,8 +18,10 @@ return new class extends Migration {
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
             $table->string('password');
+            $table->string('image')->nullable();
             $table->enum('gender', ['male', 'female']);
             $table->date('birth_date');
+            $table->boolean('is_active')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });

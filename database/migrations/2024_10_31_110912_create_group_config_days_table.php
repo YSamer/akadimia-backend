@@ -10,13 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('wirds', function (Blueprint $table) {
+        Schema::create('group_config_days', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('group_id')->constrained()->onDelete('cascade');
-            $table->date('date');
-            $table->enum('type', config('wird.types'));
-            $table->integer('amount')->comment('المقدار');
-            $table->decimal('score', 9, 2)->nullable();
+            $table->foreignId('group_config_id')->constrained()->onDelete('cascade');
+            $table->enum('day', ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
             $table->timestamps();
         });
     }
@@ -26,6 +23,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('wirds');
+        Schema::dropIfExists('group_config_days');
     }
 };

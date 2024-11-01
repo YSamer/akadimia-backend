@@ -15,8 +15,8 @@ return new class extends Migration
         Schema::create('batches', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->date('submission_date'); // تاريخ تقديم الدفعة
-            $table->date('start_date'); // تاريخ بداية الدفعة        
+            $table->date('submission_date');
+            $table->date('start_date');    
             $table->timestamps();
         });
     }

@@ -13,13 +13,13 @@ return new class extends Migration {
         Schema::create('wird_dones', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->foreignId('wird_id')->constrained()->onDelete('cascade'); // إشارة إلى الورد اليومي
-            $table->boolean('is_completed')->default(false); // حالة الإتمام
-            $table->decimal('score', 5, 2)->nullable()->comment('درجة الأداء'); // عمود درجة الأداء، يمكن أن يكون نسبة مئوية مثل 100.00
+            $table->unsignedBigInteger('wird_id');
+            $table->boolean('is_completed')->default(false);
+            $table->decimal('score', 9, 2)->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
+            $table->foreign('wird_id')->references('id')->on('wirds')->onDelete('cascade');
         });
     }
 

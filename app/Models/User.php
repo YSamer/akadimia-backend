@@ -22,9 +22,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'phone',
+        'password',
+        'image',
         'gender',
         'birth_date',
-        'password',
+        'is_active',
     ];
 
     /**
@@ -47,7 +49,51 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'phone_verified_at' => 'datetime',
+            'birth_date' => 'date',
+            'is_active' => 'boolean',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the groups the user belongs to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function groups()
+    {
+        return $this->morphToMany(Group::class, 'member', 'group_members', 'member_id', 'group_id')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get all wird completions associated with the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function wirdDones()
+    {
+        return $this->hasMany(WirdDone::class);
+    }
+
+    /**
+     * Check if the user is active.
+     *
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->is_active;
+    }
+
+    /**
+     * Scope a query to only include active users.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
     }
 }
