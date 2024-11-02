@@ -18,6 +18,7 @@ class Batch extends Model
         'name',
         'submission_date',
         'start_date',
+        'max_number',
     ];
 
     /**
@@ -28,6 +29,7 @@ class Batch extends Model
     protected $casts = [
         'submission_date' => 'date',
         'start_date' => 'date',
+        'max_number' => 'integer',
     ];
 
     /**

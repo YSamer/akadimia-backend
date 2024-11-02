@@ -26,6 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'image',
         'gender',
         'birth_date',
+        'role',
         'is_active',
     ];
 
@@ -74,6 +75,29 @@ class User extends Authenticatable implements MustVerifyEmail
     public function wirdDones()
     {
         return $this->hasMany(WirdDone::class);
+    }
+
+    /**
+     * Check if the admin has a specific role.
+     *
+     * @param string $role
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        return $this->role === $role;
+    }
+
+    /**
+     * Scope a query to only include admins with a specific role.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $role
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithRole($query, $role)
+    {
+        return $query->where('role', $role);
     }
 
     /**

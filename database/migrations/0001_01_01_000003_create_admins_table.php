@@ -20,8 +20,8 @@ return new class extends Migration {
             $table->string('password');
             $table->string('image')->nullable();
             $table->enum('gender', ['male', 'female']);
-            $table->enum('role', ['admin', 'teacher']);
             $table->date('birth_date');
+            $table->enum('role', ['super_admin', 'admin', 'teacher']);
             $table->boolean('is_active')->default(true);
             $table->rememberToken();
             $table->timestamps();
