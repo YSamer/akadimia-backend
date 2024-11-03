@@ -14,8 +14,11 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('group_id')->constrained()->onDelete('cascade');
             $table->date('date');
+            $table->string('title')->nullable();
+            $table->string('value')->nullable();
+            $table->integer('from')->nullable();
+            $table->integer('to')->nullable();
             $table->enum('type', config('wird.types'));
-            $table->integer('amount')->comment('المقدار');
             $table->decimal('score', 9, 2)->nullable();
             $table->timestamps();
         });

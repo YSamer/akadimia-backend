@@ -15,7 +15,10 @@ return new class extends Migration {
             $table->unsignedBigInteger('group_id');
             $table->enum('type', config('wird.types'));
             $table->integer('amount');
+            $table->enum('day', ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
             $table->timestamps();
+
+            $table->unique(['group_id', 'day']);
 
             $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
         });

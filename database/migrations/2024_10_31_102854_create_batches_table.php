@@ -13,7 +13,7 @@ return new class extends Migration {
     {
         Schema::create('batches', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->date('submission_date');
             $table->date('start_date');
             $table->integer('max_number')->nullable();
