@@ -13,12 +13,15 @@ return new class extends Migration {
         Schema::create('group_configs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('group_id');
+            $table->string('title')->nullable();
+            $table->string('value')->nullable();
+            $table->integer('from')->nullable();
+            $table->integer('to')->nullable();
             $table->enum('type', config('wird.types'));
-            $table->integer('amount');
+            $table->decimal('score', 9, 2)->nullable();
+
             $table->enum('day', ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
             $table->timestamps();
-
-            $table->unique(['group_id', 'day']);
 
             $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
         });
