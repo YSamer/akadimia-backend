@@ -18,6 +18,13 @@ class UserAuthController extends Controller
 
     public function register(Request $request)
     {
+        // Check if email already exists
+        $existingUser = User::where('email', $request->email)->first();
+        if ($existingUser) {
+            return $this->errorResponse('Email already exists. Please login.');
+        }
+
+        // Validate request data
         $request->validate([
             'email' => 'required|string|email|max:255|unique:users,email',
             'phone' => 'required|string|max:15|unique:users,phone',
@@ -37,16 +44,11 @@ class UserAuthController extends Controller
                 'birth_date' => $request->birth_date,
             ]);
 
-            // Generate OTP
+            cache()->forget("otp_{$user->id}");
             $otp = rand(100000, 999999);
-
             cache()->put("otp_{$user->id}", $otp, 300);
-
-            // Send OTP to user (can be sent via email or SMS)
             Mail::to($user->email)->send(new OtpMail($otp, $user));
 
-            // Send verification email
-            // $user->sendEmailVerificationNotification();
             DB::commit();
 
             return $this->successResponse($user, 'Registration successful. Please verify your email.');
@@ -73,12 +75,36 @@ class UserAuthController extends Controller
             $user->markEmailAsVerified();
             cache()->forget("otp_{$user->id}");
 
-            return $this->successResponse(null, 'Email verified successfully.');
+            $token = $user->createToken('API Token')->plainTextToken;
+
+            return $this->successResponse(['token' => $token, 'user' => $user], 'Email verified successful');
         }
 
         return $this->errorResponse('Invalid or expired OTP.', null, 400);
     }
 
+    public function reSendOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'forget' => 'nullable|boolean',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        if ($request->forget) {
+            cache()->forget("otp_reset_{$user->id}");
+            $otp = rand(100000, 999999);
+            cache()->put("otp_reset_{$user->id}", $otp, 300);
+            Mail::to($user->email)->send(new OtpMail($otp, $user));
+        } else {
+            cache()->forget("otp_{$user->id}");
+            $otp = rand(100000, 999999);
+            cache()->put("otp_{$user->id}", $otp, 300);
+            Mail::to($user->email)->send(new OtpMail($otp, $user));
+        }
+
+        return $this->successResponse(null, 'OTP re-sent to your email.');
+    }
     public function login(Request $request)
     {
         $request->validate([
@@ -93,7 +119,11 @@ class UserAuthController extends Controller
         $user = Auth::user();
 
         if (!$user->hasVerifiedEmail()) {
-            return $this->errorResponse('Please verify your email.', null, 403);
+            cache()->forget("otp_{$user->id}");
+            $otp = rand(100000, 999999);
+            cache()->put("otp_{$user->id}", $otp, 300);
+            Mail::to($user->email)->send(new OtpMail($otp, $user));
+            return $this->successResponse(['user' => $user], 'Login successful');
         }
 
         $token = $user->createToken('API Token')->plainTextToken;
@@ -109,8 +139,8 @@ class UserAuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
+        cache()->forget("otp_reset_{$user->id}");
         $otp = rand(100000, 999999);
-
         cache()->put("otp_reset_{$user->id}", $otp, 300);
         Mail::to($user->email)->send(new OtpMail($otp, $user));
 

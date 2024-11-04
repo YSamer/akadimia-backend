@@ -11,6 +11,7 @@ Route::get('/email/verify/{id}/{hash}', [UserAuthController::class, 'verify'])->
 Route::prefix('user')->group(function () {
     Route::post('register', [UserAuthController::class, 'register']);
     Route::post('login', [UserAuthController::class, 'login']);
+    Route::post('re-send-otp', [UserAuthController::class, 'reSendOtp']);
     Route::post('forgot-password', [UserAuthController::class, 'forgotPassword']);
     Route::post('verify-otp-reset', [UserAuthController::class, 'verifyOtpForPasswordReset']);
     Route::post('reset-password', [UserAuthController::class, 'resetPassword']);
