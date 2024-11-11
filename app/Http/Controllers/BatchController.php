@@ -26,7 +26,9 @@ class BatchController extends Controller
             return $this->errorResponse('المرحلة غير موجودة', 404);
         }
 
-        return $this->successResponse(new BatchResource($batch), '');
+        $batch->load('achievements');
+
+        return $this->successResponse(new BatchResource($batch, true), '');
     }
 
     public function store(Request $request)
@@ -57,7 +59,6 @@ class BatchController extends Controller
         ]);
 
         $batch->update($request->all());
-
         return $this->successResponse(new BatchResource($batch), 'تم تحديث المرحلة بنجاح');
     }
 

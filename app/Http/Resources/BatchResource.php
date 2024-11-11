@@ -3,10 +3,21 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\BatchApplyResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BatchResource extends JsonResource
 {
+
+    public $resource;
+    public $show;
+    public function __construct($resource, $show = null)
+    {
+        $this->resource = $resource;
+        $this->show = $show;
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -14,13 +25,22 @@ class BatchResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        // Get the authenticated user
+        $user = Auth::user();
+        $userApply = ($user && $user instanceof \App\Models\User) ? $user->applies->where('batch_id', $this->id)->first() : null;
+
+        $data = [
             'id' => $this->id,
             'name' => $this->name ? $this->name : $this->numberToArabicOrdinal(),
             'submission_date' => $this->submission_date ? $this->submission_date->format('Y-m-d') : null,
             'start_date' => $this->start_date ? $this->start_date->format('Y-m-d') : null,
             'max_number' => $this->max_number,
             'groups' => GroupResource::collection($this->whenLoaded('groups')),
+            'achievements' => AchievementResource::collection($this->whenLoaded('achievements')),
         ];
+        if ($userApply && $this->show)
+            $data['applies'] = new BatchApplyResource($userApply);
+
+        return $data;
     }
 }

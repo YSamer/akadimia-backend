@@ -50,6 +50,7 @@ class Batch extends Model
         return $this->hasMany(Group::class);
     }
 
+    
     function numberToArabicOrdinal()
     {
         $number = $this->id;

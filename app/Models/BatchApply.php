@@ -1,11 +1,11 @@
 <?php
 
-use App\Models\User;
-use App\Models\Batch;
+namespace App\Models;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Apply extends Model
+class BatchApply extends Model
 {
     use HasFactory;
 
@@ -13,7 +13,12 @@ class Apply extends Model
         'user_id',
         'batch_id',
         'status',
+        'achievement_ids',
         'notes',
+    ];
+
+    protected $casts = [
+        'achievement_ids' => 'array',
     ];
 
     const STATUS_PENDING = 'pending';

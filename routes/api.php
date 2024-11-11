@@ -5,6 +5,7 @@ use App\Http\Controllers\BatchController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\BatchApplyController;
 
 // User Auth 
 Route::get('admin/verify/{id}/{hash}', [AdminAuthController::class, 'verify'])->name('admin.verification.verify');
@@ -27,6 +28,10 @@ Route::prefix('user')->group(function () {
         // Batches
         Route::get('batches', [BatchController::class, 'index']);
         Route::get('batches/{id}', [BatchController::class, 'show']);
+        Route::post('batch/apply', [BatchApplyController::class, 'apply']);
+        Route::post('batch/achieve', [BatchApplyController::class, 'achieve']);
+        Route::post('batch/unachieve', [BatchApplyController::class, 'unachieve']);
+
 
         // Groups
         Route::get('groups', [GroupController::class, 'index']);
