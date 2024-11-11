@@ -15,9 +15,10 @@ return new class extends Migration {
             $table->id();
             $table->string('name')->nullable();
             $table->date('submission_date');
-            $table->date('start_date');
+            $table->date('start_date')->nullable();
             $table->integer('max_number')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

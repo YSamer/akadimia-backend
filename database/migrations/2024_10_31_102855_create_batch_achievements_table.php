@@ -10,15 +10,15 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('groups', function (Blueprint $table) {
+        Schema::create('batch_achievements', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('batch_id');
-            $table->string('name');
-            $table->string('image')->nullable();
+            $table->unsignedBigInteger('achievement_id');
             $table->timestamps();
 
+            // Foreign key constraints
             $table->foreign('batch_id')->references('id')->on('batches')->onDelete('cascade');
-            $table->softDeletes();
+            $table->foreign('achievement_id')->references('id')->on('achievements')->onDelete('cascade');
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('groups');
+        Schema::dropIfExists('batch_achievements');
     }
 };
