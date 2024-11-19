@@ -6,6 +6,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\BatchApplyController;
+use App\Http\Controllers\GroupConfigController;
 
 // User Auth 
 Route::get('admin/verify/{id}/{hash}', [AdminAuthController::class, 'verify'])->name('admin.verification.verify');
@@ -64,6 +65,13 @@ Route::prefix('admin')->group(function () {
         Route::post('groups/create', [GroupController::class, 'store']);
         Route::post('groups/update/{id}', [GroupController::class, 'update']);
         Route::post('groups/delete/{id}', [GroupController::class, 'destroy']);
+
+        // Group Configs
+        Route::get('group-configs', [GroupConfigController::class, 'index']);
+        Route::get('group-configs/{id}', [GroupConfigController::class, 'show']);
+        Route::post('group-configs/create', [GroupConfigController::class, 'store']);
+        Route::post('group-configs/update/{id}', [GroupConfigController::class, 'update']);
+        Route::post('group-configs/delete/{id}', [GroupConfigController::class, 'destroy']);
     });
 });
 

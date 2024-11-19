@@ -25,7 +25,6 @@ class BatchResource extends JsonResource
      */
     public function toArray($request)
     {
-        // Get the authenticated user
         $user = Auth::user();
         $userApply = ($user && $user instanceof \App\Models\User) ? $user->applies->where('batch_id', $this->id)->first() : null;
 
@@ -38,8 +37,12 @@ class BatchResource extends JsonResource
             'groups' => GroupResource::collection($this->whenLoaded('groups')),
             'achievements' => AchievementResource::collection($this->whenLoaded('achievements')),
         ];
-        if ($userApply && $this->show)
+        if ($user && $user instanceof \App\Models\User) {
+            $data['is_apply'] = $user->applies->where('batch_id', $this->id)->first() ? true : false;
+        }
+        if ($userApply && $this->show) {
             $data['applies'] = new BatchApplyResource($userApply);
+        }
 
         return $data;
     }

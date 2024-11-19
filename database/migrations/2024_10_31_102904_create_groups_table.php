@@ -18,6 +18,8 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->foreign('batch_id')->references('id')->on('batches')->onDelete('cascade');
+
+            $table->unique(['name', 'batch_id']);
             $table->softDeletes();
         });
     }

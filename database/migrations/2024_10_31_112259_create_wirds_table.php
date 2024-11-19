@@ -15,10 +15,11 @@ return new class extends Migration {
             $table->foreignId('group_id')->constrained()->onDelete('cascade');
             $table->date('date');
             $table->string('title')->nullable();
-            $table->string('value')->nullable();
+            $table->string('amount')->nullable();
             $table->integer('from')->nullable();
             $table->integer('to')->nullable();
-            $table->enum('type', config('wird.types'));
+            $table->string('wird_type');
+            $table->string('section_type');
             $table->decimal('score', 9, 2)->nullable();
             $table->timestamps();
         });

@@ -14,19 +14,25 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('group_id');
             $table->string('title')->nullable();
-            $table->string('value')->nullable();
+            $table->integer('amount')->nullable();
             $table->integer('from')->nullable();
             $table->integer('to')->nullable();
-            $table->enum('type', config('wird.types'));
+            $table->string('wird_type');
+            $table->string('section_type');
             $table->decimal('score', 9, 2)->nullable();
-
             $table->enum('day', ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
             $table->timestamps();
 
             $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
+            $table->index(['group_id', 'day']);
         });
     }
 
+    // $request->validate([
+    //     'wird_type' => 'required|in:' . implode(',', config('enums.wird_types')),
+    //     'section_type' => 'required|in:' . implode(',', config('enums.section_types')),
+    // ]);
+    
     /**
      * Reverse the migrations.
      */

@@ -16,8 +16,14 @@ class GroupConfig extends Model
      */
     protected $fillable = [
         'group_id',
-        'type',
+        'day',
+        'title',
         'amount',
+        'from',
+        'to',
+        'wird_type',
+        'section_type',
+        'score',
     ];
 
     /**
@@ -28,6 +34,7 @@ class GroupConfig extends Model
     protected $casts = [
         'group_id' => 'integer',
         'amount' => 'integer',
+        'score' => 'decimal:2',
     ];
 
     /**

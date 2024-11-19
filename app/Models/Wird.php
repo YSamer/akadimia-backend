@@ -17,8 +17,12 @@ class Wird extends Model
     protected $fillable = [
         'group_id',
         'date',
-        'type',
+        'title',
         'amount',
+        'from',
+        'to',
+        'wird_type',
+        'section_type',
         'score',
     ];
 
@@ -29,8 +33,8 @@ class Wird extends Model
      */
     protected $casts = [
         'group_id' => 'integer',
-        'date' => 'date',
         'amount' => 'integer',
+        'date' => 'date',
         'score' => 'decimal:2',
     ];
 
