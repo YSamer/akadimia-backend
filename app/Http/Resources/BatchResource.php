@@ -34,6 +34,7 @@ class BatchResource extends JsonResource
             'submission_date' => $this->submission_date ? $this->submission_date->format('Y-m-d') : null,
             'start_date' => $this->start_date ? $this->start_date->format('Y-m-d') : null,
             'max_number' => $this->max_number,
+            'gender' => $this->gender,
             'groups' => GroupResource::collection($this->whenLoaded('groups')),
             'achievements' => AchievementResource::collection($this->whenLoaded('achievements')),
         ];

@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('admins', function (Blueprint $table) {
+        Schema::create('teachers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->string('image')->nullable();
             $table->enum('gender', ['male', 'female']);
             $table->date('birth_date');
-            $table->enum('role', ['super_admin', 'admin'])->default('admin');
+            $table->enum('role', ['teacher'])->default('teacher');
             $table->boolean('is_active')->default(true);
             $table->rememberToken();
             $table->timestamps();
@@ -33,6 +33,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('admins');
+        Schema::dropIfExists('teachers');
     }
 };

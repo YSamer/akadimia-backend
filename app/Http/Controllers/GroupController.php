@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Http\Resources\GroupResource;
 use App\Models\Group;
+use App\Models\GroupMember;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -19,7 +20,7 @@ class GroupController extends Controller
 
     public function show($id)
     {
-        $group = Group::with('batch')->find($id);
+        $group = Group::with(['batch', 'members.member'])->find($id);
         if (!$group) {
             return $this->errorResponse('المجموعة غير موجودة', 404);
         }
@@ -49,7 +50,7 @@ class GroupController extends Controller
     {
         $group = Group::find($id);
         if (!$group) {
-            return $this->errorResponse('المجموعة ��ير موجودة', 404);
+            return $this->errorResponse('المجموعة غير موجودة', 404);
         }
 
         $request->validate([
@@ -83,4 +84,91 @@ class GroupController extends Controller
         $group->delete();
         return $this->successResponse(null, 'تم حذف المجموعة بنجاح');
     }
+
+    public function addMember(Request $request)
+    {
+        $request->validate([
+            'group_id' => 'required|exists:groups,id',
+            'member_id' => 'required|integer',
+            'member_type' => 'required|string|in:User,Teacher,Admin',
+        ]);
+
+        $group = Group::find($request->group_id);
+        if (!$group) {
+            return $this->errorResponse('المجموعة غير موجودة', 404);
+        }
+
+        $model = "App\\Models\\" . $request->member_type;
+        if (!class_exists($model)) {
+            return $this->errorResponse("نوع العضو غير متاح.", 422);
+        }
+
+        $member = $model::find($request->member_id);
+        if (!$member) {
+            return $this->errorResponse("العضو غير موجود.", 404);
+        }
+
+        // Check if the member is already in the group
+        $exists = GroupMember::where([
+            'group_id' => $request->group_id,
+            'member_id' => $request->member_id,
+            'member_type' => $model,
+        ])->exists();
+
+        if ($exists) {
+            return $this->errorResponse("هذا العضو موجود بالفعل داخل المجموعة.", 409);
+        }
+
+        // Add member to the group
+        $groupMember = GroupMember::create([
+            'group_id' => $group->id,
+            'member_id' => $request->member_id,
+            'member_type' => $model,
+        ]);
+
+        return $this->successResponse($groupMember, "تم إضافة العضو للمجموعة بنجاح.");
+    }
+
+    public function removeMember(Request $request)
+    {
+        $request->validate([
+            'group_id' => 'required|exists:groups,id',
+            'member_id' => 'required|integer',
+            'member_type' => 'required|string|in:User,Teacher,Admin',
+        ]);
+
+        $group = Group::find($request->group_id);
+        if (!$group) {
+            return $this->errorResponse('المجموعة غير موجودة', 404);
+        }
+
+        $model = "App\\Models\\" . $request->member_type;
+        if (!class_exists($model)) {
+            return $this->errorResponse("نوع العضو غير متاح.", 422);
+        }
+
+        $member = $model::find($request->member_id);
+        if (!$member) {
+            return $this->errorResponse("العضو غير موجود.", 404);
+        }
+
+        // Check if the member is in the group
+        $exists = GroupMember::where([
+            'group_id' => $request->group_id,
+            'member_id' => $request->member_id,
+            'member_type' => $model,
+        ])->exists();
+        if (!$exists) {
+            return $this->errorResponse("هذا العضو غير موجود داخل المجموعة.", 404);
+        }
+        // Remove member from the group
+        $groupMember = GroupMember::where([
+            'group_id' => $request->group_id,
+            'member_id' => $request->member_id,
+            'member_type' => $model,
+        ])->first();
+        $groupMember->delete();
+        return $this->successResponse(null, "تم حذف العضو من المجموعة بنجاح.");
+    }
+
 }

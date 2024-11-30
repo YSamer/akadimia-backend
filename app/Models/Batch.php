@@ -19,6 +19,7 @@ class Batch extends Model
         'submission_date',
         'start_date',
         'max_number',
+        'gender',
     ];
 
     /**
@@ -50,7 +51,7 @@ class Batch extends Model
         return $this->hasMany(Group::class);
     }
 
-    
+
     function numberToArabicOrdinal()
     {
         $number = $this->id;

@@ -60,6 +60,16 @@ class Group extends Model
     }
 
     /**
+     * Get the members associated with the group.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function members()
+    {
+        return $this->hasMany(GroupMember::class);
+    }
+
+    /**
      * Get the users associated with the group.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
@@ -78,6 +88,17 @@ class Group extends Model
     public function admins()
     {
         return $this->morphedByMany(Admin::class, 'member', 'group_members', 'group_id', 'member_id')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get the teachers associated with the group.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function teachers()
+    {
+        return $this->morphedByMany(Teacher::class, 'member', 'group_members', 'group_id', 'member_id')
             ->withTimestamps();
     }
 }

@@ -19,7 +19,8 @@ class GroupResource extends JsonResource
             'name' => $this->name,
             'image' => $this->image ? asset('storage/' . $this->image) : null,
             'batch_id' => $this->batch_id,
-            'batch' => new BatchResource($this->whenLoaded('batch')), // Ensure that the 'batch' relationship is loaded
+            'batch' => new BatchResource($this->whenLoaded('batch')),
+            'members' => GroupMemberResource::collection($this->whenLoaded('members')),
             'created_at' => $this->created_at ? $this->created_at->format('Y-m-d H:i:s') : null,
             'updated_at' => $this->updated_at ? $this->updated_at->format('Y-m-d H:i:s') : null,
         ];

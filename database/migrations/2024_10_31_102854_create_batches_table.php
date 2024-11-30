@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->date('submission_date');
             $table->date('start_date')->nullable();
             $table->integer('max_number')->nullable();
+            $table->enum('gender', ['male', 'female']);
             $table->timestamps();
             $table->softDeletes();
         });

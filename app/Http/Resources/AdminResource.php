@@ -20,9 +20,9 @@ class AdminResource extends JsonResource
             'email' => $this->email,
             'phone' => $this->phone,
             'gender' => $this->gender,
-            'birth_date' => $this->birth_date,
-            'email_verified_at' => $this->email_verified_at,
-            'phone_verified_at' => $this->phone_verified_at,
+            'birth_date' => $this->birth_date ? $this->birth_date->format('Y-m-d H:i:s') : null,
+            'email_verified_at' => $this->email_verified_at ? $this->email_verified_at->format('Y-m-d H:i:s') : null,
+            'phone_verified_at' => $this->phone_verified_at ? $this->phone_verified_at->format('Y-m-d H:i:s') : null,
             'created_at' => $this->created_at ? $this->created_at->format('Y-m-d H:i:s') : null,
             'updated_at' => $this->updated_at ? $this->updated_at->format('Y-m-d H:i:s') : null,
         ];

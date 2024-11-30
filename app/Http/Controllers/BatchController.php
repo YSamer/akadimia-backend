@@ -38,6 +38,7 @@ class BatchController extends Controller
             'submission_date' => 'required|date',
             'start_date' => 'nullable|date',
             'max_number' => 'required|integer',
+            'gender' => 'required|string',
         ]);
 
         $batch = Batch::create($request->all());
@@ -56,6 +57,7 @@ class BatchController extends Controller
             'submission_date' => 'date',
             'start_date' => 'date',
             'max_number' => 'integer',
+            'gender' => 'string',
         ]);
 
         $batch->update($request->all());
