@@ -61,14 +61,14 @@ Route::prefix('admin')->group(function () {
         Route::get('all-teachers', [AppController::class, 'allTeachers']);
 
         // Batches
-        Route::get('batches', [BatchController::class, 'index']);
+        Route::get('batches', [BatchController::class, 'indexAdmin']);
         Route::get('batches/{id}', [BatchController::class, 'show']);
         Route::post('batches/create', [BatchController::class, 'store']);
         Route::post('batches/update/{id}', [BatchController::class, 'update']);
         Route::post('batches/delete/{id}', [BatchController::class, 'destroy']);
 
         // Groups
-        Route::get('groups', [GroupController::class, 'index']);
+        Route::get('groups', [GroupController::class, 'indexAdmin']);
         Route::get('groups/{id}', [GroupController::class, 'show']);
         Route::post('groups/create', [GroupController::class, 'store']);
         Route::post('groups/update/{id}', [GroupController::class, 'update']);

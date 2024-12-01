@@ -18,6 +18,31 @@ class GroupController extends Controller
         return $this->successResponse(GroupResource::collection($groups));
     }
 
+    public function indexAdmin(Request $request)
+    {
+        $perPage = $request->per_page > 0 ? $request->input('per_page', 10) : 0;
+        $searchQuery = $request->input('q', '');
+        $sortBy = $request->input('sort_by', 'id');
+        $orderBy = $request->input('order_by', 'asc');
+
+        $query = Group::query();
+
+        if (!empty($searchQuery)) {
+            $query->where(function ($q) use ($searchQuery) {
+                $q->where('name', 'like', '%' . $searchQuery . '%');
+            });
+        }
+
+        $query->orderBy($sortBy, $orderBy);
+
+        $groups = $query->paginate(
+            function ($total) use ($perPage) {
+                return $perPage == -1 ? $total : $perPage;
+            }
+        );
+        return $this->successResponse(GroupResource::collection($groups)->response()->getData(), 'barnds_retrieved_successfully');
+    }
+
     public function show($id)
     {
         $group = Group::with(['batch', 'members.member'])->find($id);

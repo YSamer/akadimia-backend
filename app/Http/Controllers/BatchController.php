@@ -17,6 +17,30 @@ class BatchController extends Controller
 
         return $this->successResponse(BatchResource::collection($batches), '');
     }
+    public function indexAdmin(Request $request)
+    {
+        $perPage = $request->per_page > 0 ? $request->input('per_page', 10) : 0;
+        $searchQuery = $request->input('q', '');
+        $sortBy = $request->input('sort_by', 'id');
+        $orderBy = $request->input('order_by', 'asc');
+
+        $query = Batch::query();
+
+        if (!empty($searchQuery)) {
+            $query->where(function ($q) use ($searchQuery) {
+                $q->where('name', 'like', '%' . $searchQuery . '%');
+            });
+        }
+
+        $query->orderBy($sortBy, $orderBy);
+
+        $batches = $query->paginate(
+            function ($total) use ($perPage) {
+                return $perPage == -1 ? $total : $perPage;
+            }
+        );
+        return $this->successResponse(BatchResource::collection($batches)->response()->getData(), 'barnds_retrieved_successfully');
+    }
 
     public function show(Request $request, $id)
     {
