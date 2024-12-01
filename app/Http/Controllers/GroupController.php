@@ -21,9 +21,10 @@ class GroupController extends Controller
     public function indexAdmin(Request $request)
     {
         $perPage = $request->per_page > 0 ? $request->input('per_page', 10) : 0;
-        $searchQuery = $request->input('q', '');
+        $searchQuery = $request->input('search', '');
         $sortBy = $request->input('sort_by', 'id');
         $orderBy = $request->input('order_by', 'asc');
+        $batch = $request->input('batch_id');
 
         $query = Group::query();
 
@@ -31,6 +32,10 @@ class GroupController extends Controller
             $query->where(function ($q) use ($searchQuery) {
                 $q->where('name', 'like', '%' . $searchQuery . '%');
             });
+        }
+
+        if ($batch) {
+            $query->where('batch_id', $batch);
         }
 
         $query->orderBy($sortBy, $orderBy);

@@ -20,7 +20,7 @@ class BatchController extends Controller
     public function indexAdmin(Request $request)
     {
         $perPage = $request->per_page > 0 ? $request->input('per_page', 10) : 0;
-        $searchQuery = $request->input('q', '');
+        $searchQuery = $request->input('search', '');
         $sortBy = $request->input('sort_by', 'id');
         $orderBy = $request->input('order_by', 'asc');
 
