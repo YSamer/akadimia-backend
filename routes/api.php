@@ -44,6 +44,7 @@ Route::prefix('user')->group(function () {
 Route::prefix('admin')->group(function () {
     Route::post('register', [AdminAuthController::class, 'register']);
     Route::post('login', [AdminAuthController::class, 'login']);
+    Route::post('re-send-otp', [AdminAuthController::class, 'reSendOtp']);
     Route::post('forgot-password', [AdminAuthController::class, 'forgotPassword']);
     Route::post('verify-otp-reset', [AdminAuthController::class, 'verifyOtpForPasswordReset']);
     Route::post('reset-password', [AdminAuthController::class, 'resetPassword']);
@@ -88,6 +89,7 @@ Route::prefix('admin')->group(function () {
 Route::prefix('teacher')->group(function () {
     Route::post('register', [TeacherAuthController::class, 'register']);
     Route::post('login', [TeacherAuthController::class, 'login']);
+    Route::post('re-send-otp', [TeacherAuthController::class, 'reSendOtp']);
     Route::post('forgot-password', [TeacherAuthController::class, 'forgotPassword']);
     Route::post('verify-otp-reset', [TeacherAuthController::class, 'verifyOtpForPasswordReset']);
     Route::post('reset-password', [TeacherAuthController::class, 'resetPassword']);

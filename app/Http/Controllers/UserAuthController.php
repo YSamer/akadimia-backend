@@ -105,6 +105,7 @@ class UserAuthController extends Controller
 
         return $this->successResponse(null, 'OTP re-sent to your email.');
     }
+    
     public function login(Request $request)
     {
         $request->validate([

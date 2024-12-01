@@ -101,6 +101,29 @@ class AdminAuthController extends Controller
         return $this->successResponse(['token' => $token, 'admin' => $admin], 'Login successful');
     }
 
+    public function reSendOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:admins,email',
+            'forget' => 'nullable|boolean',
+        ]);
+
+        $user = Admin::where('email', $request->email)->first();
+        if ($request->forget) {
+            cache()->forget("admin_otp_reset_{$user->id}");
+            $otp = rand(100000, 999999);
+            cache()->put("admin_otp_reset_{$user->id}", $otp, 300);
+            Mail::to($user->email)->send(new OtpMail($otp, $user));
+        } else {
+            cache()->forget("admin_otp_{$user->id}");
+            $otp = rand(100000, 999999);
+            cache()->put("admin_otp_{$user->id}", $otp, 300);
+            Mail::to($user->email)->send(new OtpMail($otp, $user));
+        }
+
+        return $this->successResponse(null, 'OTP re-sent to your email.');
+    }
+
     public function forgotPassword(Request $request)
     {
         $request->validate([
