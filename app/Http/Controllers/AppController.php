@@ -27,10 +27,10 @@ class AppController extends Controller
 
     public function allUsers(Request $request)
     {
-        // search by name, email, phone, id
+        $perPage = $request->per_page > 0 ? $request->input('per_page', 10) : 0;
         $search = $request->input('search');
-        $order_by = $request->input('order_by');
-        $order_type = $request->input('order_type', 'asc');
+        $sortBy = $request->input('sort_by', 'id');
+        $orderBy = $request->input('order_by', 'asc');
 
         $query = User::query();
 
@@ -41,23 +41,23 @@ class AppController extends Controller
                 ->orWhere('id', 'LIKE', "%{$search}%");
         }
 
-        if ($order_by && in_array($order_by, ['name', 'email', 'phone', 'id'])) {
-            $query->orderBy($order_by, $order_type);
-        } else {
-            $query->orderBy('id', 'asc');
-        }
+        $query->orderBy($sortBy, $orderBy);
 
-        $users = $query->paginate(20);
+        $users = $query->paginate(
+            function ($total) use ($perPage) {
+                return $perPage == -1 ? $total : $perPage;
+            }
+        );
 
-        return $this->successResponse(SimpleUserResource::collection($users));
+        return $this->successResponse(SimpleUserResource::collection($users)->response()->getData());
     }
 
     public function allAdmins(Request $request)
     {
-        // search by name, email, phone, id
+        $perPage = $request->per_page > 0 ? $request->input('per_page', 10) : 0;
         $search = $request->input('search');
-        $order_by = $request->input('order_by');
-        $order_type = $request->input('order_type', 'asc');
+        $sortBy = $request->input('sort_by', 'id');
+        $orderBy = $request->input('order_by', 'asc');
 
         $query = Admin::query();
 
@@ -68,22 +68,23 @@ class AppController extends Controller
                 ->orWhere('id', 'LIKE', "%{$search}%");
         }
 
-        if ($order_by && in_array($order_by, ['name', 'email', 'phone', 'id'])) {
-            $query->orderBy($order_by, $order_type);
-        } else {
-            $query->orderBy('id', 'asc');
-        }
+        $query->orderBy($sortBy, $orderBy);
 
-        $admins = $query->paginate(20);
+        $admins = $query->paginate(
+            function ($total) use ($perPage) {
+                return $perPage == -1 ? $total : $perPage;
+            }
+        );
 
-        return $this->successResponse(SimpleAdminResource::collection($admins));
+        return $this->successResponse(SimpleAdminResource::collection($admins)->response()->getData());
     }
 
     public function allTeachers(Request $request)
     {
+        $perPage = $request->per_page > 0 ? $request->input('per_page', 10) : 0;
         $search = $request->input('search');
-        $order_by = $request->input('order_by');
-        $order_type = $request->input('order_type', 'asc');
+        $sortBy = $request->input('sort_by', 'id');
+        $orderBy = $request->input('order_by', 'asc');
 
         $query = Teacher::query();
 
@@ -94,14 +95,14 @@ class AppController extends Controller
                 ->orWhere('id', 'LIKE', "%{$search}%");
         }
 
-        if ($order_by && in_array($order_by, ['name', 'email', 'phone', 'id'])) {
-            $query->orderBy($order_by, $order_type);
-        } else {
-            $query->orderBy('id', 'asc');
-        }
+        $query->orderBy($sortBy, $orderBy);
 
-        $teachers = $query->paginate(20);
+        $teachers = $query->paginate(
+            function ($total) use ($perPage) {
+                return $perPage == -1 ? $total : $perPage;
+            }
+        );
 
-        return $this->successResponse(SimpleTeacherResource::collection($teachers));
+        return $this->successResponse(SimpleTeacherResource::collection($teachers)->response()->getData());
     }
 }
