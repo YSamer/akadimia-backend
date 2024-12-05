@@ -40,7 +40,7 @@ class GroupController extends Controller
 
         $query->orderBy($sortBy, $orderBy);
 
-        $groups = $query->paginate(
+        $groups = $query->with('batch')->paginate(
             function ($total) use ($perPage) {
                 return $perPage == -1 ? $total : $perPage;
             }

@@ -2,24 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\AdminResource;
 use App\Http\Resources\SimpleAdminResource;
 use App\Http\Resources\SimpleTeacherResource;
 use App\Http\Resources\SimpleUserResource;
-use App\Http\Resources\UserResource;
-use App\Mail\OtpMail;
 use App\Models\Admin;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Number;
 
 class AppController extends Controller
 {
