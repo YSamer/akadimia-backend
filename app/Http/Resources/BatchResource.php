@@ -37,7 +37,10 @@ class BatchResource extends JsonResource
             'gender' => $this->gender,
             'groups' => GroupResource::collection($this->whenLoaded('groups')),
             'achievements' => AchievementResource::collection($this->whenLoaded('achievements')),
+            'members_num' => $this->allMembers()->count(),
+            'users_num' => $this->usersMembers()->count(),
         ];
+        
         if ($user && $user instanceof \App\Models\User) {
             $data['is_apply'] = $user->applies->where('batch_id', $this->id)->first() ? true : false;
         }

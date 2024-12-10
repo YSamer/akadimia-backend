@@ -51,6 +51,20 @@ class Batch extends Model
         return $this->hasMany(Group::class);
     }
 
+    // get numder members for all groups in the batch
+    public function allMembers()
+    {
+        return GroupMember::whereHas('group', function ($query) {
+            $query->where('batch_id', $this->id);
+        })->get();
+    }
+
+    // get numder members for users in all groups in the batch
+    public function usersMembers()
+    {
+        return $this->allMembers()->where('member_type', 'App\Models\User');
+    }
+
 
     function numberToArabicOrdinal()
     {

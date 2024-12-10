@@ -63,6 +63,7 @@ class GroupController extends Controller
             'name' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'batch_id' => 'required|exists:batches,id',
+            'rate_type' => 'required|in:excellent,very_good,good,acceptable',
         ]);
 
         $data = $request->only(['name', 'batch_id']);
@@ -87,6 +88,7 @@ class GroupController extends Controller
             'name' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'batch_id' => 'nullable|exists:batches,id',
+            'rate_type' => 'nullable|in:excellent,very_good,good,acceptable',
         ]);
 
         $data = $request->only(['name', 'batch_id']);
@@ -102,14 +104,23 @@ class GroupController extends Controller
         return $this->successResponse(new GroupResource($group), 'تم تحديث المجموعة بنجاح');
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required|string',
+        ]);
+
         $group = Group::find($id);
         if (!$group) {
             return $this->errorResponse('المجموعة غير موجودة', 404);
         }
+
+        if ($group->name !== $request->get('name')) {
+            return $this->errorResponse('لا يمكن حذف المجموعة', 400);
+        }
+
         if ($group->image) {
-            Storage::disk('public')->delete($group->image);
+            Storage::disk('public')->delete(paths: $group->image);
         }
         $group->delete();
         return $this->successResponse(null, 'تم حذف المجموعة بنجاح');

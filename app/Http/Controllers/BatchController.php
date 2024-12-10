@@ -6,6 +6,8 @@ use App\Models\Batch;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\BatchResource;
+use App\Http\Resources\GroupMemberResource;
+use App\Models\GroupMember;
 
 class BatchController extends Controller
 {
@@ -44,13 +46,11 @@ class BatchController extends Controller
 
     public function show(Request $request, $id)
     {
-        $batch = Batch::find($id);
+        $batch = Batch::with('achievements')->find($id);
 
         if (!$batch) {
-            return $this->errorResponse('المرحلة غير موجودة', 404);
+            return $this->errorResponse('الدفعة غير موجودة', 404);
         }
-
-        $batch->load('achievements');
 
         return $this->successResponse(new BatchResource($batch, true), '');
     }
@@ -67,14 +67,14 @@ class BatchController extends Controller
 
         $batch = Batch::create($request->all());
 
-        return $this->successResponse(new BatchResource($batch), 'تمت إضافة المرحلة بنجاح');
+        return $this->successResponse(new BatchResource($batch), 'تمت إضافة الدفعة بنجاح');
     }
 
     public function update(Request $request, $id)
     {
         $batch = Batch::find($id);
         if (!$batch) {
-            return $this->errorResponse('المرحلة غير موجودة', 404);
+            return $this->errorResponse('الدفعة غير موجودة', 404);
         }
         $request->validate([
             'name' => 'string',
@@ -82,20 +82,68 @@ class BatchController extends Controller
             'start_date' => 'date',
             'max_number' => 'integer',
             'gender' => 'string',
+
         ]);
 
         $batch->update($request->all());
-        return $this->successResponse(new BatchResource($batch), 'تم تحديث المرحلة بنجاح');
+        return $this->successResponse(new BatchResource($batch), 'تم تحديث الدفعة بنجاح');
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string',
+        ]);
+
+        $batch = Batch::find($id);
+        if (!$batch) {
+            return $this->errorResponse('الدفعة غير موجودة', 404);
+        }
+
+        if ($batch->name !== $request->get('name')) {
+            return $this->errorResponse('لا يمكن حذف الدفعة', 400);
+        }
+
+        $batch->achievements()->detach();
+        $batch->delete();
+
+        return $this->successResponse(null, 'تم حذف الدفعة بنجاح');
+    }
+
+    public function batchMembers(Request $request, $id)
     {
         $batch = Batch::find($id);
         if (!$batch) {
-            return $this->errorResponse('المرحلة غير موجودة', 404);
+            return $this->errorResponse('الدفعة غير موجودة', 404);
         }
-        $batch->delete();
 
-        return $this->successResponse(null, 'تم حذف المرحلة بنجاح');
+        $perPage = $request->get('per_page', 10);
+
+        $members = GroupMember::whereHas('group', function ($query) use ($id) {
+            $query->where('batch_id', $id);
+        })
+            ->with('member')
+            ->paginate($perPage);
+
+        return $this->successResponse(GroupMemberResource::collection($members)->response()->getData(), '');
     }
+
+    public function batchUsers(Request $request, $id)
+    {
+        $batch = Batch::find($id);
+        if (!$batch) {
+            return $this->errorResponse('الدفعة غير موجودة', 404);
+        }
+
+        $perPage = $request->get('per_page', 10);
+
+        $members = GroupMember::whereHas('group', function ($query) use ($id) {
+            $query->where('batch_id', $id)->where('member_type', 'App\Models\User');
+        })
+            ->with('member')
+            ->paginate($perPage);
+
+        return $this->successResponse(GroupMemberResource::collection($members)->response()->getData(), '');
+    }
+
 }

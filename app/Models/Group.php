@@ -18,6 +18,7 @@ class Group extends Model
         'batch_id',
         'name',
         'image',
+        'rate_type',
     ];
 
     /**
