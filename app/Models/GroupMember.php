@@ -49,4 +49,20 @@ class GroupMember extends Model
     {
         return $this->belongsTo(Group::class);
     }
+
+    /**
+     * Get the member type as a human-readable label.
+     *
+     * @return string
+     */
+    public function memberType()
+    {
+        $map = [
+            'App\\Models\\User' => 'student',
+            'App\\Models\\Teacher' => 'teacher',
+            'App\\Models\\Admin' => 'admin',
+        ];
+
+        return $map[$this->member_type] ?? 'unknown';
+    }
 }

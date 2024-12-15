@@ -14,21 +14,16 @@ class GroupMemberResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'group_id' => $this->group_id,
-            'member_id' => $this->member_id,
-            'member_type' => $this->member_type,
-            'member' => $this->whenLoaded('member', function () {
-                return [
-                    'id' => $this->member->id,
-                    'name' => $this->member->name,
-                    'email' => $this->member->email ?? null,
-                    'phone' => $this->member->phone ?? null,
-                    'gender' => $this->member->gender ?? null,
-                    'birth_date' => $this->member->birth_date ? $this->member->birth_date->format('Y-m-d H:i:s') : null,
-                    'image' => $this->member->image ?? null,
-                ];
-            }),
+            'id' => $this->member->id,
+            'name' => $this->member->name,
+            'email' => $this->member->email ?? null,
+            'phone' => $this->member->phone ?? null,
+            'gender' => $this->member->gender ?? null,
+            'birth_date' => $this->member->birth_date ? $this->member->birth_date->format('Y-m-d H:i:s') : null,
+            'image' => $this->member->image ?? null,
+            'group_id' => $this->group_id ?: null,
+            'member_id' => $this->id,
+            'member_type' => $this->memberType(),
         ];
     }
 }
