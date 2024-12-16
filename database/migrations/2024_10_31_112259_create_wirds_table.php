@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\SectionType;
+use App\Enums\WirdType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,15 +15,17 @@ return new class extends Migration {
         Schema::create('wirds', function (Blueprint $table) {
             $table->id();
             $table->foreignId('group_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('group_wird_config_id')->nullable();
             $table->date('date');
             $table->string('title')->nullable();
-            $table->string('amount')->nullable();
-            $table->integer('from')->nullable();
-            $table->integer('to')->nullable();
-            $table->string('wird_type');
-            $table->string('section_type');
-            $table->decimal('score', 9, 2)->nullable();
+            $table->integer('start_from')->nullable();
+            $table->integer('end_to')->nullable();
+            // Attachment
+            $table->string('file_path')->nullable();
+            $table->string('url')->nullable();
             $table->timestamps();
+
+            $table->foreign('group_wird_config_id')->references('id')->on('group_wird_configs')->onDelete('cascade');
         });
     }
 

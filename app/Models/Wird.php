@@ -9,39 +9,25 @@ class Wird extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    // Define the table associated with the model
+    protected $table = 'wirds';
+
+    // Define the fillable fields (to protect against mass assignment)
     protected $fillable = [
         'group_id',
+        'group_wird_config_id',
         'date',
         'title',
-        'amount',
-        'from',
-        'to',
-        'wird_type',
-        'section_type',
-        'score',
+        'start_from',
+        'end_to',
+        'file_path',
+        'url',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'group_id' => 'integer',
-        'amount' => 'integer',
-        'date' => 'date',
-        'score' => 'decimal:2',
-    ];
+    // Define the relationships
 
     /**
-     * Get the group that this wird belongs to.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * Get the group that owns the Wird.
      */
     public function group()
     {
@@ -49,12 +35,10 @@ class Wird extends Model
     }
 
     /**
-     * Get the instances of WirdDone associated with this wird.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * Get the group config associated with the Wird.
      */
-    public function wirdDones()
+    public function groupWirdConfig()
     {
-        return $this->hasMany(WirdDone::class);
+        return $this->belongsTo(GroupWirdConfig::class, 'group_wird_config_id');
     }
 }
