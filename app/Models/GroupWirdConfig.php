@@ -20,6 +20,7 @@ class GroupWirdConfig extends Model
         'under_wird',
         'grade',
         'sanction',
+        'is_repeated',
         'is_changed',
         'from',
         'to',

@@ -24,6 +24,7 @@ return new class extends Migration {
             $table->integer('grade')->default(1); // الدرجات
             $table->integer('sanction')->default(1); // العقوبات
             // Repeated
+            $table->boolean('is_repeated')->default(false);
             $table->boolean('is_changed')->default(false);
             $table->integer('from')->nullable();
             $table->integer('to')->nullable();
@@ -31,7 +32,7 @@ return new class extends Migration {
             $table->integer('end_to')->nullable();
             $table->integer('change_value')->nullable();
             $table->unsignedBigInteger('repeated_from_list')->nullable();
-            $table->set('days', array_column(WeekDays::cases(), 'value'))->nullable();
+            $table->json('days')->nullable();
             $table->timestamps();
 
             $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');

@@ -7,7 +7,7 @@ use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\BatchApplyController;
-use App\Http\Controllers\GroupConfigController;
+use App\Http\Controllers\GroupWirdConfigController;
 use App\Http\Controllers\TeacherAuthController;
 
 // User Auth 
@@ -81,11 +81,11 @@ Route::prefix('admin')->group(function () {
     Route::post('groups/remove-member', [GroupController::class, 'removeMember']);
 
     // Group Configs
-    Route::get('group-configs', [GroupConfigController::class, 'index']);
-    Route::get('group-configs/{id}', [GroupConfigController::class, 'show']);
-    Route::post('group-configs/create', [GroupConfigController::class, 'store']);
-    Route::post('group-configs/update/{id}', [GroupConfigController::class, 'update']);
-    Route::post('group-configs/delete/{id}', [GroupConfigController::class, 'destroy']);
+    Route::get('group-wird-configs', [GroupWirdConfigController::class, 'index']);
+    Route::get('group-wird-configs/{id}', [GroupWirdConfigController::class, 'show']);
+    Route::post('group-wird-configs/create', [GroupWirdConfigController::class, 'store']);
+    Route::post('group-wird-configs/update/{id}', [GroupWirdConfigController::class, 'update']);
+    Route::post('group-wird-configs/delete/{id}', [GroupWirdConfigController::class, 'destroy']);
 
     // });
 });
@@ -119,11 +119,11 @@ Route::prefix('teacher')->group(function () {
         // Route::post('groups/delete/{id}', [GroupController::class, 'destroy']);
 
         // Group Configs
-        Route::get('group-configs', [GroupConfigController::class, 'index']);
-        Route::get('group-configs/{id}', [GroupConfigController::class, 'show']);
-        // Route::post('group-configs/create', [GroupConfigController::class, 'store']);
-        // Route::post('group-configs/update/{id}', [GroupConfigController::class, 'update']);
-        // Route::post('group-configs/delete/{id}', [GroupConfigController::class, 'destroy']);
+        Route::get('group-configs', [GroupWirdConfigController::class, 'index']);
+        Route::get('group-configs/{id}', [GroupWirdConfigController::class, 'show']);
+        // Route::post('group-configs/create', [GroupWirdConfigController::class, 'store']);
+        // Route::post('group-configs/update/{id}', [GroupWirdConfigController::class, 'update']);
+        // Route::post('group-configs/delete/{id}', [GroupWirdConfigController::class, 'destroy']);
     });
 });
 

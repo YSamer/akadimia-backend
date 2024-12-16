@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class GroupConfigResource extends JsonResource
+class GroupWirdConfigResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,13 +19,21 @@ class GroupConfigResource extends JsonResource
             'group_id' => $this->group_id,
             'group' => new GroupResource($this->whenLoaded('group')), // Include related group if loaded
             'title' => $this->title,
-            'amount' => $this->amount,
+            'description' => $this->description,
+            'section_type' => $this->section_type,
+            'wird_type' => $this->wird_type,
+            'under_wird' => $this->under_wird,
+            'grade' => $this->grade,
+            'sanction' => $this->sanction,
+            'is_repeated' => $this->is_repeated,
+            'is_changed' => $this->is_changed,
             'from' => $this->from,
             'to' => $this->to,
-            'wird_type' => $this->wird_type,
-            'section_type' => $this->section_type,
-            'score' => $this->score,
-            'day' => $this->day,
+            'start_from' => $this->start_from,
+            'end_to' => $this->end_to,
+            'change_value' => $this->change_value,
+            'repeated_from_list' => $this->repeated_from_list,
+            'days' => $this->days,
             'created_at' => $this->created_at ? $this->created_at->format('Y-m-d H:i:s') : null,
             'updated_at' => $this->updated_at ? $this->updated_at->format('Y-m-d H:i:s') : null,
         ];
