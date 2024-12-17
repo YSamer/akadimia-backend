@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\BatchApplyResource;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Traits\MyFunctions;
 
 class BatchResource extends JsonResource
 {
+    use MyFunctions;
 
     public $resource;
     public $show;
@@ -30,7 +32,7 @@ class BatchResource extends JsonResource
 
         $data = [
             'id' => $this->id,
-            'name' => $this->name ? $this->name : $this->numberToArabicOrdinal(),
+            'name' => $this->name ? $this->name : $this->numberToArabicOrdinalFemale($this->id),
             'submission_date' => $this->submission_date ? $this->submission_date->format('Y-m-d') : null,
             'start_date' => $this->start_date ? $this->start_date->format('Y-m-d') : null,
             'max_number' => $this->max_number,
@@ -40,7 +42,7 @@ class BatchResource extends JsonResource
             'members_num' => $this->allMembers()->count(),
             'users_num' => $this->usersMembers()->count(),
         ];
-        
+
         if ($user && $user instanceof \App\Models\User) {
             $data['is_apply'] = $user->applies->where('batch_id', $this->id)->first() ? true : false;
         }

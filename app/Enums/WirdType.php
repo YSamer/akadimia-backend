@@ -17,7 +17,7 @@ enum WirdType: string
     case SALAH_MAHSOOF = 'salah_mahsoof'; // الصلاة بالمحفوظ
     case MUTOON = 'mutoon';            // متون
 
-    public function label(): string
+    public function arabicName(): string
     {
         return match ($this) {
             self::HIFZ => 'حفظ',

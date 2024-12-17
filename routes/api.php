@@ -9,6 +9,7 @@ use App\Http\Controllers\AppController;
 use App\Http\Controllers\BatchApplyController;
 use App\Http\Controllers\GroupWirdConfigController;
 use App\Http\Controllers\TeacherAuthController;
+use App\Http\Controllers\WirdController;
 
 // User Auth 
 Route::get('admin/verify/{id}/{hash}', [AdminAuthController::class, 'verify'])->name('admin.verification.verify');
@@ -80,12 +81,16 @@ Route::prefix('admin')->group(function () {
     Route::post('groups/add-member', [GroupController::class, 'addMember']);
     Route::post('groups/remove-member', [GroupController::class, 'removeMember']);
 
-    // Group Configs
+    // Group Wird Configs
     Route::get('group-wird-configs', [GroupWirdConfigController::class, 'index']);
     Route::get('group-wird-configs/{id}', [GroupWirdConfigController::class, 'show']);
     Route::post('group-wird-configs/create', [GroupWirdConfigController::class, 'store']);
     Route::post('group-wird-configs/update/{id}', [GroupWirdConfigController::class, 'update']);
     Route::post('group-wird-configs/delete/{id}', [GroupWirdConfigController::class, 'destroy']);
+
+    // Wird 
+    Route::post('set-today-wird', [WirdController::class, 'setTodayWirds']);
+    Route::get('wirds', [WirdController::class, 'index']);
 
     // });
 });
@@ -119,11 +124,11 @@ Route::prefix('teacher')->group(function () {
         // Route::post('groups/delete/{id}', [GroupController::class, 'destroy']);
 
         // Group Configs
-        Route::get('group-configs', [GroupWirdConfigController::class, 'index']);
-        Route::get('group-configs/{id}', [GroupWirdConfigController::class, 'show']);
-        // Route::post('group-configs/create', [GroupWirdConfigController::class, 'store']);
-        // Route::post('group-configs/update/{id}', [GroupWirdConfigController::class, 'update']);
-        // Route::post('group-configs/delete/{id}', [GroupWirdConfigController::class, 'destroy']);
+        // Route::get('group-wird-configs', [GroupWirdConfigController::class, 'index']);
+        // Route::get('group-wird-configs/{id}', [GroupWirdConfigController::class, 'show']);
+        // Route::post('group-wird-configs/create', [GroupWirdConfigController::class, 'store']);
+        // Route::post('group-wird-configs/update/{id}', [GroupWirdConfigController::class, 'update']);
+        // Route::post('group-wird-configs/delete/{id}', [GroupWirdConfigController::class, 'destroy']);
     });
 });
 

@@ -21,8 +21,11 @@ class GroupWirdConfigController extends Controller
     {
         $group_id = $request->input('group_id');
 
-        $configs = GroupWirdConfig::with('group')
-            ->where('group_id', $group_id)->get();
+        $query = GroupWirdConfig::query(); //with('group');
+        if ($group_id) {
+            $query->where('group_id', $group_id);
+        }
+        $configs = $query->get();
 
         return $this->successResponse(GroupWirdConfigResource::collection($configs));
     }

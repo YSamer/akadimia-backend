@@ -27,4 +27,16 @@ enum SectionType: string
             self::POETRY_LINE => 'بيت',
         };
     }
+    public function type(): string
+    {
+        return match ($this) {
+            self::JUZ => 'Male',
+            self::HIZB => 'Male',
+            self::QUARTER => 'Male',
+            self::SURAH => 'Female',
+            self::PAGE => 'Male',
+            self::AYAH => 'Female',
+            self::POETRY_LINE => 'Male',
+        };
+    }
 }

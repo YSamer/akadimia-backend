@@ -72,4 +72,38 @@ class GroupWirdConfig extends Model
     {
         return $this->belongsTo(ListModel::class, 'repeated_from_list');
     }
+
+    /**
+     * Get the wirds range
+     */
+    public function getWirdsRange($start_from, $end_to = null)
+    {
+        $from = $this->from;
+        $to = $this->to;
+        $change_value = $this->change_value;
+
+        $end_to = $end_to ?: ($start_from + $change_value - 1);
+
+        if ($start_from < $from || $start_from > $to) {
+            throw new \InvalidArgumentException("The start_from must be between {$from} and {$to}");
+        }
+
+        // Normalize $end_to in case it exceeds $to
+        if ($end_to > $to) {
+            $end_to = ($end_to % $to) + ($from - 1) ?: $to;
+        }
+
+        $result = [];
+
+        if ($start_from <= $end_to) {
+            $result = range($start_from, $end_to);
+        } else {
+            $result = array_merge(
+                range($start_from, $to),
+                range($from, $end_to)
+            );
+        }
+
+        return $result;
+    }
 }

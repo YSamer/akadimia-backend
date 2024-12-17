@@ -12,7 +12,7 @@ enum WeekDays: string
     case FRIDAY = 'friday';
     case SATURDAY = 'saturday';
 
-    public function label(): string
+    public function arabicName(): string
     {
         return match ($this) {
             self::SUNDAY => 'الأحد',
