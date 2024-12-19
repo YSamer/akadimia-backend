@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Group;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class GroupMemberResource extends JsonResource

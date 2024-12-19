@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Http\Resources\GroupMemberResource;
 use App\Http\Resources\GroupResource;
 use App\Models\Group;
 use App\Models\GroupMember;
@@ -167,7 +169,7 @@ class GroupController extends Controller
             'member_type' => $model,
         ]);
 
-        return $this->successResponse($groupMember, "تم إضافة العضو للمجموعة بنجاح.");
+        return $this->successResponse(GroupMemberResource::collection($group->members), "تم إضافة العضو للمجموعة بنجاح.");
     }
 
     public function removeMember(Request $request)
@@ -182,11 +184,12 @@ class GroupController extends Controller
         if (!$group) {
             return $this->errorResponse('المجموعة غير موجودة', 404);
         }
-
+        
         $model = "App\\Models\\" . $request->member_type;
         if (!class_exists($model)) {
             return $this->errorResponse("نوع العضو غير متاح.", 422);
         }
+
 
         $member = $model::find($request->member_id);
         if (!$member) {
@@ -209,7 +212,8 @@ class GroupController extends Controller
             'member_type' => $model,
         ])->first();
         $groupMember->delete();
-        return $this->successResponse(null, "تم حذف العضو من المجموعة بنجاح.");
+
+        return $this->successResponse(GroupMemberResource::collection($group->members), "تم حذف العضو من المجموعة بنجاح.");
     }
 
 }

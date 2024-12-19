@@ -7,6 +7,7 @@ use App\Traits\APIResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\BatchResource;
 use App\Http\Resources\GroupMemberResource;
+use App\Models\Group;
 use App\Models\GroupMember;
 
 class BatchController extends Controller
@@ -133,6 +134,11 @@ class BatchController extends Controller
         $batch = Batch::find($id);
         if (!$batch) {
             return $this->errorResponse('الدفعة غير موجودة', 404);
+        }
+
+        $group = Group::find($request->group_id);
+        if (!$group) {
+            return $this->errorResponse('المجموعة غير موجودة', 404);
         }
 
         $perPage = $request->get('per_page', 10);

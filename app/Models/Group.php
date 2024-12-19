@@ -45,9 +45,9 @@ class Group extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function groupConfigs()
+    public function groupWirdConfigs()
     {
-        return $this->hasMany(GroupConfig::class);
+        return $this->hasMany(GroupWirdConfig::class);
     }
 
     /**
