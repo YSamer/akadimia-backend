@@ -22,6 +22,7 @@ class SimpleUserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
+            'image' => $this->image,
             'is_exist' => $group ? $group->members()->where('member_id', $this->id)->exists() : null,
         ];
     }

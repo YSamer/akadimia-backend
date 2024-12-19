@@ -20,6 +20,7 @@ class TeacherResource extends JsonResource
             'email' => $this->email,
             'phone' => $this->phone,
             'gender' => $this->gender,
+            'image' => $this->image,
             'birth_date' => $this->birth_date ? $this->birth_date->format('Y-m-d H:i:s') : null,
             'email_verified_at' => $this->email_verified_at ? $this->email_verified_at->format('Y-m-d H:i:s') : null,
             'phone_verified_at' => $this->phone_verified_at ? $this->phone_verified_at->format('Y-m-d H:i:s') : null,

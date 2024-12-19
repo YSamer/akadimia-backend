@@ -17,7 +17,7 @@ class AppController extends Controller
 
     public function allUsers(Request $request)
     {
-        $perPage = $request->per_page > 0 ? $request->input('per_page', 10) : 0;
+        $perPage = $request->per_page > 0 ? $request->input('per_page', 25) : 0;
         $search = $request->input('search');
         $sortBy = $request->input('sort_by', 'id');
         $orderBy = $request->input('order_by', 'asc');
@@ -44,7 +44,7 @@ class AppController extends Controller
 
     public function allAdmins(Request $request)
     {
-        $perPage = $request->per_page > 0 ? $request->input('per_page', 10) : 0;
+        $perPage = $request->per_page > 0 ? $request->input('per_page', 25) : 0;
         $search = $request->input('search');
         $sortBy = $request->input('sort_by', 'id');
         $orderBy = $request->input('order_by', 'asc');
@@ -71,7 +71,7 @@ class AppController extends Controller
 
     public function allTeachers(Request $request)
     {
-        $perPage = $request->per_page > 0 ? $request->input('per_page', 10) : 0;
+        $perPage = $request->per_page > 0 ? $request->input('per_page', 25) : 0;
         $search = $request->input('search');
         $sortBy = $request->input('sort_by', 'id');
         $orderBy = $request->input('order_by', 'asc');
