@@ -58,9 +58,9 @@ class GroupMember extends Model
     public function memberType()
     {
         $map = [
-            'App\\Models\\User' => 'student',
-            'App\\Models\\Teacher' => 'teacher',
-            'App\\Models\\Admin' => 'admin',
+            'App\\Models\\User' => 'User',
+            'App\\Models\\Teacher' => 'Teacher',
+            'App\\Models\\Admin' => 'Admin',
         ];
 
         return $map[$this->member_type] ?? 'unknown';
