@@ -27,6 +27,7 @@ class GroupWirdConfigResource extends JsonResource
             'sanction' => $this->sanction,
             'is_repeated' => $this->is_repeated,
             'is_changed' => $this->is_changed,
+            'is_weekly_changed' => $this->is_weekly_changed,
             'from' => $this->from,
             'to' => $this->to,
             'start_from' => $this->start_from,

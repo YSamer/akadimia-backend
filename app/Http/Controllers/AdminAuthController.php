@@ -72,8 +72,9 @@ class AdminAuthController extends Controller
         if ($storedOtp && hash_equals((string) $request->otp, (string) $storedOtp)) {
             $admin->markEmailAsVerified();
             cache()->forget("admin_otp_{$admin->id}");
-
-            return $this->successResponse(null, 'Email verified successfully.');
+            $token = $admin->createToken('API Token')->plainTextToken;
+            
+            return $this->successResponse(['token' => $token, 'admin' => $admin], 'Email verified successfully.');
         }
 
         return $this->errorResponse('Invalid or expired OTP.', null, 400);

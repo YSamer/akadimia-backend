@@ -72,8 +72,9 @@ class TeacherAuthController extends Controller
         if ($storedOtp && hash_equals((string) $request->otp, (string) $storedOtp)) {
             $teacher->markEmailAsVerified();
             cache()->forget("teacher_otp_{$teacher->id}");
+            $token = $teacher->createToken('API Token')->plainTextToken;
 
-            return $this->successResponse(null, 'Email verified successfully.');
+            return $this->successResponse(['token' => $token, 'teacher' => $teacher], 'Email verified successfully.');
         }
 
         return $this->errorResponse('Invalid or expired OTP.', null, 400);

@@ -26,6 +26,7 @@ return new class extends Migration {
             // Repeated
             $table->boolean('is_repeated')->default(false);
             $table->boolean('is_changed')->default(false);
+            $table->boolean('is_weekly_changed')->default(false);
             $table->integer('from')->nullable();
             $table->integer('to')->nullable();
             $table->integer('start_from')->nullable();

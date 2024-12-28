@@ -22,6 +22,7 @@ class GroupWirdConfig extends Model
         'sanction',
         'is_repeated',
         'is_changed',
+        'is_weekly_changed',
         'from',
         'to',
         'start_from',
