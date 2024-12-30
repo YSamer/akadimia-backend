@@ -40,7 +40,7 @@ class Wird extends Model
 
     public function getGradeAttribute()
     {
-        return $this->groupWirdConfig ? $this->groupWirdConfig->grade : null;
+        return $this->groupWirdConfig ? $this->groupWirdConfig->grade : 0;
     }
 
     /**

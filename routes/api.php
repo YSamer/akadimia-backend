@@ -10,6 +10,7 @@ use App\Http\Controllers\BatchApplyController;
 use App\Http\Controllers\GroupWirdConfigController;
 use App\Http\Controllers\TeacherAuthController;
 use App\Http\Controllers\WirdController;
+use App\Http\Controllers\WirdDoneController;
 
 // User Auth 
 Route::get('admin/verify/{id}/{hash}', [AdminAuthController::class, 'verify'])->name('admin.verification.verify');
@@ -43,7 +44,8 @@ Route::prefix('user')->group(function () {
 
         // Wirds
         Route::get('today-wirds/{id}', [WirdController::class, 'groupTodayWirdsStudent']);
-        Route::post('wird-done', [WirdController::class, 'wirdDone']);
+        Route::post('wird-done', [WirdDoneController::class, 'wirdDone']);
+        Route::post('wird-not-done', [WirdDoneController::class, 'wirdDone']);
     });
 });
 Route::prefix('admin')->group(function () {

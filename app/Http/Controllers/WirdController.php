@@ -132,25 +132,4 @@ class WirdController extends Controller
             'percentage' => $currentGrades / $totalGrades * 100,
         ]);
     }
-
-    public function wirdDone(Request $request)
-    {
-        $this->validate($request, [
-            'wird_id' => 'required|exists:wirds,id',
-            'grade' => 'nullable|integer|min:1',
-            'is_completed' => 'required|boolean',
-        ]);
-
-        $wirdId = $request->input('wird_id');
-        $wirdDone = Auth::user()->wirdDones()->where('wird_id', $wirdId)->first();
-        if (!$wirdDone) {
-            Auth::user()->wirdDones()->create([
-                'wird_id' => $wirdId,
-                'grade' => $request->input('grade'),
-                'is_completed' => $request->input('is_completed'),
-            ]);
-        }
-
-        return $this->successResponse([], 'لقد أتممت الورد');
-    }
 }
