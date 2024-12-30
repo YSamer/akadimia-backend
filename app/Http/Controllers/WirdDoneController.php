@@ -38,7 +38,7 @@ class WirdDoneController extends Controller
             ]);
             return $this->successResponse([], 'لقد أتممت الورد');
         } else {
-            $wirdDone->score = $score ?: null;
+            $wirdDone->score = $isCompleted ? ($score ?: null) : null;
             $wirdDone->is_completed = $isCompleted;
             $wirdDone->save();
             return $this->successResponse([], $isCompleted ? 'لقد أتممت الورد' : 'حاول أن لا تضيع أوراد اليوم');
