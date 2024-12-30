@@ -55,10 +55,8 @@ class WirdDone extends Model
 
     public function getGradeAttribute()
     {
-        return $this->wird ? (
-            $this->is_completed
-            ? ($this->score ?: $this->wird->grade) :
-            0
-        ) : 0;
+        return $this->wird && $this->is_completed
+            ? ($this->score ?? $this->wird->grade)
+            : 0;
     }
 }
