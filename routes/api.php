@@ -24,26 +24,27 @@ Route::prefix('user')->group(function () {
     Route::post('reset-password', [UserAuthController::class, 'resetPassword']);
     Route::post('verify-otp', [UserAuthController::class, 'verifyOtp']);
 
-    // Route::middleware('auth:user')->group(function () {
-    Route::get('auto-login', [UserAuthController::class, 'autoLogin']);
-    Route::get('logout', [UserAuthController::class, 'logout']);
-    Route::post('update-profile', [UserAuthController::class, 'updateProfile']);
+    Route::middleware('auth:user')->group(function () {
+        Route::get('auto-login', [UserAuthController::class, 'autoLogin']);
+        Route::get('logout', [UserAuthController::class, 'logout']);
+        Route::post('update-profile', [UserAuthController::class, 'updateProfile']);
 
-    // Batches
-    Route::get('batches', [BatchController::class, 'index']);
-    Route::get('batches/{id}', [BatchController::class, 'show']);
-    Route::post('batch/apply', [BatchApplyController::class, 'apply']);
-    Route::post('batch/achieve', [BatchApplyController::class, 'achieve']);
-    Route::post('batch/unachieve', [BatchApplyController::class, 'unachieve']);
+        // Batches
+        Route::get('batches', [BatchController::class, 'index']);
+        Route::get('batches/{id}', [BatchController::class, 'show']);
+        Route::post('batch/apply', [BatchApplyController::class, 'apply']);
+        Route::post('batch/achieve', [BatchApplyController::class, 'achieve']);
+        Route::post('batch/unachieve', [BatchApplyController::class, 'unachieve']);
 
 
-    // Groups
-    Route::get('groups', [GroupController::class, 'index']);
-    Route::get('groups/{id}', [GroupController::class, 'show']);
+        // Groups
+        Route::get('groups', [GroupController::class, 'index']);
+        Route::get('groups/{id}', [GroupController::class, 'show']);
 
-    // Wirds
-    Route::get('today-wirds/{id}', [WirdController::class, 'groupTodayWirdsStudent']);
-    // });
+        // Wirds
+        Route::get('today-wirds/{id}', [WirdController::class, 'groupTodayWirdsStudent']);
+        Route::post('wird-done', [WirdController::class, 'wirdDone']);
+    });
 });
 Route::prefix('admin')->group(function () {
     Route::post('register', [AdminAuthController::class, 'register']);

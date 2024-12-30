@@ -38,6 +38,11 @@ class Wird extends Model
         return $this->belongsTo(Group::class);
     }
 
+    public function getGradeAttribute()
+    {
+        return $this->groupWirdConfig ? $this->groupWirdConfig->grade : null;
+    }
+
     /**
      * Get the group config associated with the Wird.
      */

@@ -52,4 +52,9 @@ class WirdDone extends Model
     {
         return $this->belongsTo(Wird::class);
     }
+
+    public function getGradeAttribute()
+    {
+        return $this->wird ? $this->wird->grade : null;
+    }
 }

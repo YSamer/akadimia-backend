@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\WirdDoneResource;
 use Illuminate\Http\Request;
 use App\Http\Resources\GroupWirdConfigResource;
 use App\Http\Resources\WirdResource;
 use App\Models\GroupWirdConfig;
 use App\Models\Wird;
 use App\Traits\APIResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class WirdController extends Controller
@@ -116,10 +118,39 @@ class WirdController extends Controller
         $wirds = Wird::where('date', $today)
             ->where('group_id', $groupId)->get();
 
+        $wirdsDone = Auth::user()->wirdDones()
+            ->whereIn('wird_id', $wirds->pluck('id'))
+            ->get();
+
+        $totalGrades = $wirds->sum('grade');
+        $currentGrades = $wirdsDone->sum('grade');
         return $this->successResponse([
             'wirds' => WirdResource::collection($wirds),
-            'wirds_done' => [],
-            'grade' => 0,
+            'wirds_done' => WirdDoneResource::collection($wirdsDone->except(['wird'])),
+            'total_grade' => $totalGrades,
+            'current_grade' => $currentGrades,
+            'percentage' => $currentGrades / $totalGrades * 100,
         ]);
+    }
+
+    public function wirdDone(Request $request)
+    {
+        $this->validate($request, [
+            'wird_id' => 'required|exists:wirds,id',
+            'grade' => 'nullable|integer|min:1',
+            'is_completed' => 'required|boolean',
+        ]);
+
+        $wirdId = $request->input('wird_id');
+        $wirdDone = Auth::user()->wirdDones()->where('wird_id', $wirdId)->first();
+        if (!$wirdDone) {
+            Auth::user()->wirdDones()->create([
+                'wird_id' => $wirdId,
+                'grade' => $request->input('grade'),
+                'is_completed' => $request->input('is_completed'),
+            ]);
+        }
+
+        return $this->successResponse([], 'لقد أتممت الورد');
     }
 }
