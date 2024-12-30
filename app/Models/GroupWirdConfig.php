@@ -86,7 +86,8 @@ class GroupWirdConfig extends Model
         $end_to = $end_to ?: ($start_from + $change_value - 1);
 
         if ($start_from < $from || $start_from > $to) {
-            throw new \InvalidArgumentException("The start_from must be between {$from} and {$to}");
+            $start_from = ($start_from % $to) + ($from - 1) ?: $from;
+            // throw new \InvalidArgumentException("The start_from {$start_from} must be between {$from} and {$to} {$this}");
         }
 
         // Normalize $end_to in case it exceeds $to

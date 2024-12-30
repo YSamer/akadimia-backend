@@ -109,4 +109,17 @@ class WirdController extends Controller
 
         return $this->successResponse(WirdResource::collection($wirds));
     }
+
+    public function groupTodayWirdsStudent(Request $request, $groupId)
+    {
+        $today = now()->format('Y-m-d');
+        $wirds = Wird::where('date', $today)
+            ->where('group_id', $groupId)->get();
+
+        return $this->successResponse([
+            'wirds' => WirdResource::collection($wirds),
+            'wirds_done' => [],
+            'grade' => 0,
+        ]);
+    }
 }

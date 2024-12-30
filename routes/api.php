@@ -42,7 +42,7 @@ Route::prefix('user')->group(function () {
     Route::get('groups/{id}', [GroupController::class, 'show']);
 
     // Wirds
-    Route::get('today-wirds/{id}', [WirdController::class, 'groupTodayWirds']);
+    Route::get('today-wirds/{id}', [WirdController::class, 'groupTodayWirdsStudent']);
     // });
 });
 Route::prefix('admin')->group(function () {
