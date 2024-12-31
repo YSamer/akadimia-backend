@@ -110,4 +110,9 @@ class Admin extends Authenticatable implements MustVerifyEmail
     {
         return $query->where('is_active', true);
     }
+
+    public function exams()
+    {
+        return $this->hasMany(Exam::class);
+    }
 }

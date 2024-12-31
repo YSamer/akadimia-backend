@@ -7,6 +7,7 @@ use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\BatchApplyController;
+use App\Http\Controllers\ExamController;
 use App\Http\Controllers\GroupWirdConfigController;
 use App\Http\Controllers\TeacherAuthController;
 use App\Http\Controllers\WirdController;
@@ -46,6 +47,10 @@ Route::prefix('user')->group(function () {
         Route::get('today-wirds/{id}', [WirdController::class, 'groupTodayWirdsStudent']);
         Route::post('wird-done', [WirdDoneController::class, 'wirdDone']);
         Route::post('wird-not-done', [WirdDoneController::class, 'wirdDone']);
+
+        // Exams
+        Route::get('/get-exams', [ExamController::class, 'getExams']);
+        Route::post('/send-responses', [ExamController::class, 'submitResponse']);
     });
 });
 Route::prefix('admin')->group(function () {
@@ -57,50 +62,56 @@ Route::prefix('admin')->group(function () {
     Route::post('reset-password', [AdminAuthController::class, 'resetPassword']);
     Route::post('verify-otp', [AdminAuthController::class, 'verifyOtp']);
 
-    // Route::middleware('auth:admin')->group(function () {
-    Route::get('auto-login', [AdminAuthController::class, 'autoLogin']);
-    Route::get('logout', [AdminAuthController::class, 'logout']);
-    Route::post('update-profile', [AdminAuthController::class, 'updateProfile']);
+    Route::middleware('auth:admin')->group(function () {
+        Route::get('auto-login', [AdminAuthController::class, 'autoLogin']);
+        Route::get('logout', [AdminAuthController::class, 'logout']);
+        Route::post('update-profile', [AdminAuthController::class, 'updateProfile']);
 
-    // Global 
-    Route::get('all-users', [AppController::class, 'allUsers']);
-    Route::get('all-admins', [AppController::class, 'allAdmins']);
-    Route::get('all-teachers', [AppController::class, 'allTeachers']);
+        // Global 
+        Route::get('all-users', [AppController::class, 'allUsers']);
+        Route::get('all-admins', [AppController::class, 'allAdmins']);
+        Route::get('all-teachers', [AppController::class, 'allTeachers']);
 
-    // Batches
-    Route::get('batches', [BatchController::class, 'indexAdmin']);
-    Route::get('batches/{id}', [BatchController::class, 'show']);
-    Route::post('batches/create', [BatchController::class, 'store']);
-    Route::post('batches/update/{id}', [BatchController::class, 'update']);
-    Route::post('batches/delete/{id}', [BatchController::class, 'destroy']);
+        // Batches
+        Route::get('batches', [BatchController::class, 'indexAdmin']);
+        Route::get('batches/{id}', [BatchController::class, 'show']);
+        Route::post('batches/create', [BatchController::class, 'store']);
+        Route::post('batches/update/{id}', [BatchController::class, 'update']);
+        Route::post('batches/delete/{id}', [BatchController::class, 'destroy']);
 
-    Route::get('batches/{id}/members', [BatchController::class, 'batchMembers']);
-    Route::get('batches/{id}/users', [BatchController::class, 'batchUsers']);
+        Route::get('batches/{id}/members', [BatchController::class, 'batchMembers']);
+        Route::get('batches/{id}/users', [BatchController::class, 'batchUsers']);
 
 
-    // Groups
-    Route::get('groups', [GroupController::class, 'indexAdmin']);
-    Route::get('groups/{id}', [GroupController::class, 'show']);
-    Route::post('groups/create', [GroupController::class, 'store']);
-    Route::post('groups/update/{id}', [GroupController::class, 'update']);
-    Route::post('groups/delete/{id}', [GroupController::class, 'destroy']);
-    Route::post('groups/add-member', [GroupController::class, 'addMember']);
-    Route::post('groups/remove-member', [GroupController::class, 'removeMember']);
+        // Groups
+        Route::get('groups', [GroupController::class, 'indexAdmin']);
+        Route::get('groups/{id}', [GroupController::class, 'show']);
+        Route::post('groups/create', [GroupController::class, 'store']);
+        Route::post('groups/update/{id}', [GroupController::class, 'update']);
+        Route::post('groups/delete/{id}', [GroupController::class, 'destroy']);
+        Route::post('groups/add-member', [GroupController::class, 'addMember']);
+        Route::post('groups/remove-member', [GroupController::class, 'removeMember']);
 
-    // Group Wird Configs
-    Route::get('group-wird-configs', [GroupWirdConfigController::class, 'index']);
-    Route::get('group-wird-configs/{id}', [GroupWirdConfigController::class, 'show']);
-    Route::post('group-wird-configs/create', [GroupWirdConfigController::class, 'store']);
-    Route::post('group-wird-configs/update/{id}', [GroupWirdConfigController::class, 'update']);
-    Route::post('group-wird-configs/delete/{id}', [GroupWirdConfigController::class, 'destroy']);
+        // Group Wird Configs
+        Route::get('group-wird-configs', [GroupWirdConfigController::class, 'index']);
+        Route::get('group-wird-configs/{id}', [GroupWirdConfigController::class, 'show']);
+        Route::post('group-wird-configs/create', [GroupWirdConfigController::class, 'store']);
+        Route::post('group-wird-configs/update/{id}', [GroupWirdConfigController::class, 'update']);
+        Route::post('group-wird-configs/delete/{id}', [GroupWirdConfigController::class, 'destroy']);
 
-    // Wird 
-    Route::post('set-today-wird', [WirdController::class, 'setTodayWirds']);
-    Route::get('wirds', [WirdController::class, 'index']);
-    Route::get('today-wirds', [WirdController::class, 'todayWirds']);
-    Route::get('today-wirds/{id}', [WirdController::class, 'groupTodayWirds']);
+        // Wird 
+        Route::post('set-today-wird', [WirdController::class, 'setTodayWirds']);
+        Route::get('wirds', [WirdController::class, 'index']);
+        Route::get('today-wirds', [WirdController::class, 'todayWirds']);
+        Route::get('today-wirds/{id}', [WirdController::class, 'groupTodayWirds']);
 
-    // });
+        // Exams
+        Route::post('/create-exam', [ExamController::class, 'createExam']);
+        Route::post('/add-questions', [ExamController::class, 'addQuestions']);
+        Route::get('/view-responses/{examId}', [ExamController::class, 'viewResponses']);
+
+
+    });
 });
 
 Route::prefix('teacher')->group(function () {
