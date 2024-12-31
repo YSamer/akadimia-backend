@@ -90,8 +90,18 @@ class ExamController extends Controller
     // User API to get exams
     public function getExams()
     {
-        $exams = Exam::with('questions.options')->get();
+        $exams = Exam::all();
         return $this->successResponse(ExamResource::collection($exams), 'Exams retrieved successfully');
+    }
+
+    public function getExamDetails($id)
+    {
+        $exam = Exam::with('questions.options')->find($id);
+        if (!$exam) {
+            return $this->errorResponse('الإختبار غير موجود', 404);
+        }
+
+        return $this->successResponse(new ExamResource($exam), 'Exams retrieved successfully');
     }
 
     // User API to submit a response

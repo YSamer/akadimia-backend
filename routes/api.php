@@ -50,6 +50,7 @@ Route::prefix('user')->group(function () {
 
         // Exams
         Route::get('/get-exams', [ExamController::class, 'getExams']);
+        Route::get('/get-exam/{id}', [ExamController::class, 'getExamDetails']);
         Route::post('/send-responses', [ExamController::class, 'submitResponse']);
     });
 });
@@ -106,6 +107,8 @@ Route::prefix('admin')->group(function () {
         Route::get('today-wirds/{id}', [WirdController::class, 'groupTodayWirds']);
 
         // Exams
+        Route::get('/get-exams', [ExamController::class, 'getExams']);
+        Route::get('/get-exam/{id}', [ExamController::class, 'getExamDetails']);
         Route::post('/create-exam', [ExamController::class, 'createExam']);
         Route::post('/add-questions', [ExamController::class, 'addQuestions']);
         Route::get('/view-responses/{examId}', [ExamController::class, 'viewResponses']);
@@ -150,4 +153,3 @@ Route::prefix('teacher')->group(function () {
         // Route::post('group-wird-configs/delete/{id}', [GroupWirdConfigController::class, 'destroy']);
     });
 });
-
