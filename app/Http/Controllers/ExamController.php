@@ -87,7 +87,20 @@ class ExamController extends Controller
         return $this->successResponse(QuestionResource::collection($questions), 'تم إضافة السؤال بنجاح');
     }
 
-    // User API to get exams
+    // Delete a Question
+    public function deleteQuestion($id)
+    {
+        $question = Question::find($id);
+        if (!$question) {
+            return $this->errorResponse('السؤال غير موجود', 404);
+        }
+
+        $question->options()->delete();
+        $question->delete();
+
+        return $this->successResponse([], 'تم حذف السؤال بنجاح');
+    }
+
     public function getExams()
     {
         $exams = Exam::all();
