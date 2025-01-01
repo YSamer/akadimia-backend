@@ -72,9 +72,11 @@ Route::prefix('admin')->group(function () {
         Route::get('all-users', [AppController::class, 'allUsers']);
         Route::get('all-admins', [AppController::class, 'allAdmins']);
         Route::get('all-teachers', [AppController::class, 'allTeachers']);
+        Route::get('all-group-users/{id}', [AppController::class, 'allGroupUsers']);
 
         // Batches
         Route::get('batches', [BatchController::class, 'indexAdmin']);
+        Route::get('all-batches', [BatchController::class, 'indexAll']);
         Route::get('batches/{id}', [BatchController::class, 'show']);
         Route::post('batches/create', [BatchController::class, 'store']);
         Route::post('batches/update/{id}', [BatchController::class, 'update']);
@@ -86,6 +88,7 @@ Route::prefix('admin')->group(function () {
 
         // Groups
         Route::get('groups', [GroupController::class, 'indexAdmin']);
+        Route::get('all-groups', [GroupController::class, 'indexAll']);
         Route::get('groups/{id}', [GroupController::class, 'show']);
         Route::post('groups/create', [GroupController::class, 'store']);
         Route::post('groups/update/{id}', [GroupController::class, 'update']);

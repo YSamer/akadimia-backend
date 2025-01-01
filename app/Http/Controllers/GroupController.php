@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\GroupMemberResource;
 use App\Http\Resources\GroupResource;
+use App\Http\Resources\SimpleGroupResource;
 use App\Models\Group;
 use App\Models\GroupMember;
 use App\Traits\APIResponse;
@@ -18,6 +19,12 @@ class GroupController extends Controller
     {
         $groups = Group::with('batch')->paginate(10);
         return $this->successResponse(GroupResource::collection($groups));
+    }
+
+    public function indexAll()
+    {
+        $groups = Group::all();
+        return $this->successResponse(SimpleGroupResource::collection($groups));
     }
 
     public function indexAdmin(Request $request)
@@ -184,7 +191,7 @@ class GroupController extends Controller
         if (!$group) {
             return $this->errorResponse('المجموعة غير موجودة', 404);
         }
-        
+
         $model = "App\\Models\\" . $request->member_type;
         if (!class_exists($model)) {
             return $this->errorResponse("نوع العضو غير متاح.", 422);

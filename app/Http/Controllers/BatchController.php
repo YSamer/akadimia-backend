@@ -7,6 +7,7 @@ use App\Traits\APIResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\BatchResource;
 use App\Http\Resources\GroupMemberResource;
+use App\Http\Resources\SimpleBatchResource;
 use App\Models\Group;
 use App\Models\GroupMember;
 
@@ -19,6 +20,12 @@ class BatchController extends Controller
         $batches = Batch::all();
 
         return $this->successResponse(BatchResource::collection($batches), '');
+    }
+    public function indexAll(Request $request)
+    {
+        $batches = Batch::all();
+
+        return $this->successResponse(SimpleBatchResource::collection($batches), '');
     }
     public function indexAdmin(Request $request)
     {

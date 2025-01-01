@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\SimpleAdminResource;
+use App\Http\Resources\SimpleItemResource;
 use App\Http\Resources\SimpleTeacherResource;
 use App\Http\Resources\SimpleUserResource;
 use App\Models\Admin;
@@ -40,6 +41,15 @@ class AppController extends Controller
         );
 
         return $this->successResponse(SimpleUserResource::collection($users)->response()->getData());
+    }
+
+    public function allGroupUsers(Request $request, $groupId)
+    {
+        $users = User::whereHas('groups', function ($query) use ($groupId) {
+            $query->where('group_id', $groupId);
+        })->get();
+
+        return $this->successResponse(SimpleItemResource::collection($users));
     }
 
     public function allAdmins(Request $request)
