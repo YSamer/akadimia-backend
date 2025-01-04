@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 
 class Exam extends Model
 {
@@ -31,5 +32,15 @@ class Exam extends Model
     public function forwardable()
     {
         return $this->morphTo();
+    }
+
+    public function userGrade()
+    {
+        $responses = $this->examResponses()->where('user_id', Auth::id());
+        return $responses->exists() ? $responses->with('question')
+            ->get()
+            ->sum(function ($response) {
+                return $response->question->grade ?? 0;
+            }) : null;
     }
 }

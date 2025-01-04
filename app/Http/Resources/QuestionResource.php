@@ -13,6 +13,7 @@ class QuestionResource extends JsonResource
             'type' => $this->type,
             'question' => $this->question,
             'is_required' => $this->is_required,
+            'grade' => $this->grade,
             'options' => OptionResource::collection($this->whenLoaded('options')),
         ];
     }

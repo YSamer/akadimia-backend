@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->enum('type', ['string', 'text', 'multiple_choice', 'checkbox']);
             $table->text('question');
             $table->boolean('is_required')->default(false);
+            $table->integer('grade')->default(1);
             $table->timestamps();
         });
     }

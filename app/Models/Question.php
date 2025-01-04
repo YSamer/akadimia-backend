@@ -14,6 +14,7 @@ class Question extends Model
         'type',
         'question',
         'is_required',
+        'grade',
     ];
 
     public function exam()

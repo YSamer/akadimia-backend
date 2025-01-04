@@ -18,7 +18,6 @@ class ExamController extends Controller
 {
     use APIResponse;
 
-    // Admin API to create an exam
     public function createExam(Request $request)
     {
         $request->validate([
@@ -53,7 +52,6 @@ class ExamController extends Controller
         return $this->successResponse(new ExamResource($exam), 'تم إنشاء الإختبار بنجاح');
     }
 
-    // Admin API to add questions to an exam
     public function addQuestions(Request $request)
     {
         $request->validate([
@@ -62,6 +60,7 @@ class ExamController extends Controller
             'questions.*.type' => 'required|in:string,text,multiple_choice,checkbox',
             'questions.*.question' => 'required|string',
             'questions.*.is_required' => 'boolean',
+            'questions.*.grade' => 'integer|min:1',
             'questions.*.options' => 'nullable|array',
             'questions.*.options.*.option_text' => 'required_with:questions.*.options|string',
             'questions.*.options.*.is_correct' => 'boolean',
@@ -75,6 +74,7 @@ class ExamController extends Controller
                 'type' => $questionData['type'],
                 'question' => $questionData['question'],
                 'is_required' => $questionData['is_required'] ?? false,
+                'grade' => $questionData['grade'] ?? 1,
             ]);
 
             if (isset($questionData['options']) && in_array($questionData['type'], ['multiple_choice', 'checkbox'])) {
@@ -87,7 +87,6 @@ class ExamController extends Controller
         return $this->successResponse(QuestionResource::collection($questions), 'تم إضافة السؤال بنجاح');
     }
 
-    // Delete a Question
     public function deleteQuestion($id)
     {
         $question = Question::find($id);
@@ -117,7 +116,6 @@ class ExamController extends Controller
         return $this->successResponse(new ExamResource($exam), 'Exams retrieved successfully');
     }
 
-    // User API to submit a response
     public function submitResponse(Request $request)
     {
         $request->validate([
@@ -127,13 +125,11 @@ class ExamController extends Controller
             'responses.*.response' => 'required',
         ]);
 
-        // Retrieve all required questions for the exam
         $requiredQuestions = Question::where('exam_id', $request->exam_id)
             ->where('is_required', true)
             ->pluck('id')
             ->toArray();
 
-        // Ensure all required questions are included in the responses
         $responseQuestionIds = collect($request->responses)->pluck('question_id')->toArray();
 
         $missingQuestions = array_diff($requiredQuestions, $responseQuestionIds);
@@ -145,14 +141,12 @@ class ExamController extends Controller
             ], 400);
         }
 
-        // Validate the responses based on the question type
         foreach ($request->responses as $responseData) {
             $question = Question::find($responseData['question_id']);
 
             if ($question) {
                 $validationRules = [];
 
-                // Apply validation based on question type
                 if ($question->type === 'checkbox') {
                     $validationRules[] = 'array';
                 } elseif ($question->type === 'multiple_choice') {
@@ -161,7 +155,6 @@ class ExamController extends Controller
                     $validationRules[] = 'string';
                 }
 
-                // Validate the response with the generated rules
                 $validator = Validator::make(
                     ['response' => $responseData['response']],
                     ['response' => $validationRules]
@@ -176,22 +169,17 @@ class ExamController extends Controller
             }
         }
 
-        // Validate that the combination of exam_id, question_id, and user_id is unique
         foreach ($request->responses as $responseData) {
             $question = Question::find($responseData['question_id']);
 
-            // Check for uniqueness of exam_id, question_id, and user_id combination
-            $existingResponse = ExamResponse::where('exam_id', $request->exam_id)
-                ->where('question_id', $responseData['question_id'])
-                ->where('user_id', Auth::id())
-                ->first();
-
-            if ($existingResponse) {
-                return $this->errorResponse('تم إجابة هذا الإمتحان من قبل', null, 500);
+            $existingResponses = ExamResponse::where('exam_id', $request->exam_id)
+                ->where('user_id', Auth::id());
+            // $existingResponse = $existingResponses->where('question_id', $responseData['question_id'])->first();
+            if ($existingResponses->count() > 0) {
+                return $this->errorResponse('تم إجابة هذا الإمتحان من قبل', ExamResponseResource::collection($existingResponses->get()), 500);
             }
         }
 
-        // Store the responses in the database
         $responses = [];
         foreach ($request->responses as $responseData) {
             $responses[] = ExamResponse::create([
@@ -202,12 +190,9 @@ class ExamController extends Controller
             ]);
         }
 
-        // Return the successful response
         return $this->successResponse(ExamResponseResource::collection($responses), 'Responses submitted successfully');
     }
 
-
-    // Admin API to view responses
     public function viewResponses($examId)
     {
         $responses = ExamResponse::where('exam_id', $examId)->with('question')->get();
