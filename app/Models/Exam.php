@@ -43,4 +43,31 @@ class Exam extends Model
                 return $response->question->grade ?? 0;
             }) : null;
     }
+
+    public function forMe()
+    {
+        if ($this->forwardable_type === 'App\\Models\\User' && $this->forwardable_id === Auth::id()) {
+            return true;
+        }
+
+        if ($this->forwardable_type === 'App\\Models\\Group' && $this->isInGroup($this->forwardable_id)) {
+            return $this->isInGroup($this->forwardable_id);
+        }
+
+        if ($this->forwardable_type === 'App\\Models\\Batch' && $this->isInBatch($this->forwardable_id)) {
+            return $this->isInBatch($this->forwardable_id);
+        }
+
+        return false;
+    }
+
+    protected function isInGroup($groupId)
+    {
+        return Group::find($groupId)->users()->where('member_id', Auth::id())->count() > 0;
+    }
+
+    protected function isInBatch($batchId)
+    {
+        return Batch::find($batchId)->usersMembers()->where('member_id', Auth::id())->count() > 0;
+    }
 }

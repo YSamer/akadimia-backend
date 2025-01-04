@@ -21,6 +21,7 @@ class ExamResource extends JsonResource
         ];
         if ($guard === 'user') {
             $data['my_grade'] = $this->userGrade();
+            // $data['for_me'] = $this->forMe();
         }
 
         return $data;

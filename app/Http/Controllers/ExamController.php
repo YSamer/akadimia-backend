@@ -106,6 +106,14 @@ class ExamController extends Controller
         return $this->successResponse(ExamResource::collection($exams), 'Exams retrieved successfully');
     }
 
+    public function getUserExams()
+    {
+        $exams = Exam::all()->filter(function ($exam) {
+            return $exam->forMe();
+        });
+        return $this->successResponse(ExamResource::collection($exams), 'Exams retrieved successfully');
+    }
+
     public function getExamDetails($id)
     {
         $exam = Exam::with('questions.options')->find($id);

@@ -49,7 +49,7 @@ Route::prefix('user')->group(function () {
         Route::post('wird-not-done', [WirdDoneController::class, 'wirdDone']);
 
         // Exams
-        Route::get('/get-exams', [ExamController::class, 'getExams']);
+        Route::get('/get-exams', [ExamController::class, 'getUserExams']);
         Route::get('/get-exam/{id}', [ExamController::class, 'getExamDetails']);
         Route::post('/send-responses', [ExamController::class, 'submitResponse']);
     });
