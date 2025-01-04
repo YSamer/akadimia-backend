@@ -52,16 +52,58 @@ class ExamController extends Controller
         return $this->successResponse(new ExamResource($exam), 'تم إنشاء الإختبار بنجاح');
     }
 
+    public function editExam(Request $request, $id)
+    {
+        $request->validate([
+            'title' => 'sometimes|required|string|max:255',
+            'description' => 'nullable|string',
+            'forwardable_type' => 'sometimes|required|string|in:User,Group,Batch',
+            'forwardable_id' => 'sometimes|required|integer',
+            'start_time' => 'nullable|date_format:Y-m-d H:i:s',
+            'end_time' => 'nullable|date_format:Y-m-d H:i:s|after:start_time',
+        ]);
+
+        $exam = Exam::find($id);
+
+        if (!$exam) {
+            return $this->errorResponse("الاختبار غير موجود.", 404);
+        }
+
+        if ($request->has('forwardable_type') && $request->has('forwardable_id')) {
+            $model = "App\\Models\\" . $request->forwardable_type;
+            if (!class_exists($model)) {
+                return $this->errorResponse("نوع العنصر غير متاح.", 422);
+            }
+
+            $forward = $model::find($request->forwardable_id);
+            if (!$forward) {
+                return $this->errorResponse("العنصر غير موجود.", 404);
+            }
+
+            $exam->forwardable_type = $model;
+            $exam->forwardable_id = $request->forwardable_id;
+        }
+
+        $exam->update(
+            $request->only(['title', 'description', 'start_time', 'end_time'])
+        );
+
+        return $this->successResponse(new ExamResource($exam), 'تم تعديل الإختبار بنجاح');
+    }
+
+
     public function addQuestions(Request $request)
     {
         $request->validate([
             'exam_id' => 'required|exists:exams,id',
             'questions' => 'required|array',
+            'questions.*.id' => 'nullable|integer|exists:questions,id',
             'questions.*.type' => 'required|in:string,text,multiple_choice,checkbox',
             'questions.*.question' => 'required|string',
             'questions.*.is_required' => 'boolean',
             'questions.*.grade' => 'integer|min:1',
             'questions.*.options' => 'nullable|array',
+            'questions.*.options.*.id' => 'nullable|integer|exists:options,id',
             'questions.*.options.*.option_text' => 'required_with:questions.*.options|string',
             'questions.*.options.*.is_correct' => 'boolean',
         ]);
@@ -70,15 +112,28 @@ class ExamController extends Controller
 
         $questions = [];
         foreach ($request->questions as $questionData) {
-            $question = $exam->questions()->create([
-                'type' => $questionData['type'],
-                'question' => $questionData['question'],
-                'is_required' => $questionData['is_required'] ?? false,
-                'grade' => $questionData['grade'] ?? 1,
-            ]);
+            $question = $exam->questions()->updateOrCreate(
+                ['id' => $questionData['id'] ?? null],
+                [
+                    'id' => $questionData['id'] ?? null,
+                    'type' => $questionData['type'],
+                    'question' => $questionData['question'],
+                    'is_required' => $questionData['is_required'] ?? false,
+                    'grade' => $questionData['grade'] ?? 1,
+                ],
+            );
 
             if (isset($questionData['options']) && in_array($questionData['type'], ['multiple_choice', 'checkbox'])) {
-                $question->options()->createMany($questionData['options']);
+                // $question->options()->createMany($questionData['options']);
+                foreach ($questionData['options'] as $optionData) {
+                    $question->options()->updateOrCreate(
+                        ['id' => $optionData['id'] ?? null],
+                        [
+                            'option_text' => $optionData['option_text'],
+                            'is_correct' => $optionData['is_correct'] ?? false,
+                        ]
+                    );
+                }
             }
             $questions[] = $question;
         }
@@ -100,18 +155,59 @@ class ExamController extends Controller
         return $this->successResponse([], 'تم حذف السؤال بنجاح');
     }
 
-    public function getExams()
+    public function getExams(Request $request)
     {
-        $exams = Exam::all();
-        return $this->successResponse(ExamResource::collection($exams), 'Exams retrieved successfully');
+        $perPage = $request->per_page > 0 ? $request->input('per_page', 10) : 0;
+        $searchQuery = $request->input('search', '');
+        $sortBy = $request->input('sort_by', 'id');
+        $orderBy = $request->input('order_by', 'asc');
+
+        $query = Exam::query();
+
+        if (!empty($searchQuery)) {
+            $query->where(function ($q) use ($searchQuery) {
+                $q->where('title', 'like', '%' . $searchQuery . '%');
+            });
+        }
+
+        $query->orderBy($sortBy, $orderBy);
+
+        $exams = $query->paginate(
+            function ($total) use ($perPage) {
+                return $perPage == -1 ? $total : $perPage;
+            }
+        );
+        return $this->successResponse(ExamResource::collection($exams)->response()->getData(), 'Exams retrieved successfully');
     }
 
-    public function getUserExams()
+    public function getUserExams(Request $request)
     {
-        $exams = Exam::all()->filter(function ($exam) {
+        $perPage = $request->per_page > 0 ? $request->input('per_page', 10) : 0;
+        $searchQuery = $request->input('search', '');
+        $sortBy = $request->input('sort_by', 'id');
+        $orderBy = $request->input('order_by', 'asc');
+
+        $query = Exam::query();
+
+        if (!empty($searchQuery)) {
+            $query->where(function ($q) use ($searchQuery) {
+                $q->where('title', 'like', '%' . $searchQuery . '%');
+            });
+        }
+
+        $query->orderBy($sortBy, $orderBy);
+
+        $query->get()->filter(function ($exam) {
             return $exam->forMe();
         });
-        return $this->successResponse(ExamResource::collection($exams), 'Exams retrieved successfully');
+
+        $exams = $query->paginate(
+            function ($total) use ($perPage) {
+                return $perPage == -1 ? $total : $perPage;
+            }
+        );
+
+        return $this->successResponse(ExamResource::collection($exams)->response()->getData(), 'Exams retrieved successfully');
     }
 
     public function getExamDetails($id)

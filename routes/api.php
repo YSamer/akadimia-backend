@@ -114,6 +114,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/get-exam/{id}', [ExamController::class, 'getExamDetails']);
         Route::post('/create-exam', [ExamController::class, 'createExam']);
         Route::post('/add-questions', [ExamController::class, 'addQuestions']);
+        Route::post('/edit-exam/{id}', [ExamController::class, 'editExam']);
         Route::post('/delete-question/{id}', [ExamController::class, 'deleteQuestion']);
         Route::get('/view-responses/{examId}', [ExamController::class, 'viewResponses']);
 

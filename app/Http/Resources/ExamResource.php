@@ -14,6 +14,8 @@ class ExamResource extends JsonResource
         $data = [
             'id' => $this->id,
             'title' => $this->title,
+            'forwardable_type' => class_basename($this->forwardable_type),
+            'forwardable_id' => $this->forwardable_id,
             'description' => $this->description,
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,
