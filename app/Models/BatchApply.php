@@ -15,6 +15,7 @@ class BatchApply extends Model
         'status',
         'achievement_ids',
         'notes',
+        'payment_id',
     ];
 
     protected $casts = [
@@ -33,5 +34,10 @@ class BatchApply extends Model
     public function batch()
     {
         return $this->belongsTo(Batch::class);
+    }
+
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class);
     }
 }

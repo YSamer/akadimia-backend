@@ -9,6 +9,7 @@ use App\Http\Controllers\AppController;
 use App\Http\Controllers\BatchApplyController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\GroupWirdConfigController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TeacherAuthController;
 use App\Http\Controllers\WirdController;
 use App\Http\Controllers\WirdDoneController;
@@ -53,6 +54,10 @@ Route::prefix('user')->group(function () {
         Route::get('/get-exams', [ExamController::class, 'getUserExams']);
         Route::get('/get-exam/{id}', [ExamController::class, 'getExamDetails']);
         Route::post('/send-responses', [ExamController::class, 'submitResponse']);
+
+        // Payment 
+        Route::post('/achieve-payment', [PaymentController::class, 'achievePayment']);
+        Route::post('/create-payment', [PaymentController::class, 'createPayment']);
     });
 });
 Route::prefix('admin')->group(function () {
@@ -119,7 +124,9 @@ Route::prefix('admin')->group(function () {
         Route::post('/delete-question/{id}', [ExamController::class, 'deleteQuestion']);
         Route::get('/view-responses/{examId}', [ExamController::class, 'viewResponses']);
 
-
+        // Payments
+        Route::get('/all-payments', [PaymentController::class, 'getAllPayments']);
+        Route::post('/confirm-payment/{id}', [PaymentController::class, 'confirmPayment']);
     });
 });
 

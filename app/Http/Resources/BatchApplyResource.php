@@ -19,13 +19,15 @@ class BatchApplyResource extends JsonResource
             'user_id' => $this->user_id,
             'batch_id' => $this->batch_id,
             'status' => $this->status,
-            'achievement_ids' => $this->achievement_ids, // Return the JSON array of achievement IDs
+            'achievement_ids' => $this->achievement_ids,
+            'payment_id' => $this->payment_id,
+            'payment' => $this->payment ? new PaymentResource($this->payment) : null,
             'notes' => $this->notes,
             'created_at' => $this->created_at ? $this->created_at->format('Y-m-d H:i:s') : null,
             'updated_at' => $this->updated_at ? $this->updated_at->format('Y-m-d H:i:s') : null,
 
-            'user' => new UserResource($this->whenLoaded('user')),  // Ensure that the 'user' relationship is loaded
-            'batch' => new BatchResource($this->whenLoaded('batch')), // Ensure that the 'batch' relationship is loaded
+            'user' => new UserResource($this->whenLoaded('user')),
+            'batch' => new BatchResource($this->whenLoaded('batch')),
         ];
     }
 }
