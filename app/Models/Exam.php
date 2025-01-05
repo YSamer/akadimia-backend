@@ -58,20 +58,22 @@ class Exam extends Model
             return null;
         }
 
+        // return (int) json_decode($responses->with('question', 'question.options')->get()->first()->response);
+
         return $responses->with('question', 'question.options')->get()->sum(function ($response) {
             $question = $response->question;
 
             switch ($question->type) {
                 case 'checkbox':
-                    $selectedOptions = collect($response->response);
+                    $selectedOptions = collect($response->response)->map(fn($id) => (int) $id);
                     $correctOptions = $question->options->where('is_correct', true)->pluck('id');
                     return $selectedOptions->sort()->values()->toArray() === $correctOptions->sort()->values()->toArray()
                         ? $question->grade
                         : 0;
 
                 case 'multiple_choice':
-                    $selectedOption = (int) $response->response;
-                    $correctOption = $question->options->where('is_correct', true)->pluck('id')->first();
+                    $selectedOption = (int) json_decode($response->response);
+                    $correctOption = (int) $question->options->where('is_correct', true)->pluck('id')->first();
                     return $selectedOption === $correctOption ? $question->grade : 0;
 
                 case 'string':

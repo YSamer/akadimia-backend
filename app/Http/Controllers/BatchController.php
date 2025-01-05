@@ -27,6 +27,19 @@ class BatchController extends Controller
 
         return $this->successResponse(SimpleBatchResource::collection($batches), '');
     }
+
+    public function homeBatches(Request $request)
+    {
+        $batches = Batch::where('submission_date', '<=', now())
+            ->where(function ($query) {
+                $query->whereNull('start_date')
+                    ->orWhere('start_date', '>', now());
+            })
+            ->get();
+
+        return $this->successResponse(BatchResource::collection($batches), '');
+    }
+
     public function indexAdmin(Request $request)
     {
         $perPage = $request->per_page > 0 ? $request->input('per_page', 10) : 0;

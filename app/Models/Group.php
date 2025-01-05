@@ -102,4 +102,9 @@ class Group extends Model
         return $this->morphedByMany(Teacher::class, 'member', 'group_members', 'group_id', 'member_id')
             ->withTimestamps();
     }
+
+    public function exams()
+    {
+        return $this->morphMany(Exam::class, 'forwardable');
+    }
 }

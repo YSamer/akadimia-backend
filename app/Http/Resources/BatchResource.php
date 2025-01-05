@@ -46,8 +46,18 @@ class BatchResource extends JsonResource
         if ($user && $user instanceof \App\Models\User) {
             $data['is_apply'] = $user->applies->where('batch_id', $this->id)->first() ? true : false;
         }
+
         if ($userApply && $this->show) {
+            $exams = $this->exams()
+                ->where('forwardable_type', 'App\Models\Batch')
+                ->where('is_apply', true)
+                ->get();
+                
+            $all_achievements_ids = $this->achievements->pluck('id')->sort()->values()->toArray();
+            $applied_achievements_ids = collect($userApply->achievement_ids)->map(fn($id) => (int) $id)->sort()->values()->toArray();
+            $data['is_apply_complete'] = $applied_achievements_ids === $all_achievements_ids;
             $data['applies'] = new BatchApplyResource($userApply);
+            $data['exams'] = ExamResource::collection($exams);
         }
 
         return $data;

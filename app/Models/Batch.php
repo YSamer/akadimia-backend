@@ -64,4 +64,9 @@ class Batch extends Model
     {
         return $this->allMembers()->where('member_type', 'App\Models\User');
     }
+
+    public function exams()
+    {
+        return $this->morphMany(Exam::class, 'forwardable');
+    }
 }

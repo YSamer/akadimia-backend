@@ -33,6 +33,7 @@ Route::prefix('user')->group(function () {
 
         // Batches
         Route::get('batches', [BatchController::class, 'index']);
+        Route::get('home-batches', [BatchController::class, 'homeBatches']);
         Route::get('batches/{id}', [BatchController::class, 'show']);
         Route::post('batch/apply', [BatchApplyController::class, 'apply']);
         Route::post('batch/achieve', [BatchApplyController::class, 'achieve']);

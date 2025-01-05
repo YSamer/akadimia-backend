@@ -136,4 +136,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Batch::class);
     }
+
+    public function exams()
+    {
+        return $this->morphMany(Exam::class, 'forwardable');
+    }
 }
