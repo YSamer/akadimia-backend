@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->morphs('forwardable');
             $table->timestamp('start_time')->nullable();
             $table->timestamp('end_time')->nullable();
+            $table->boolean('is_apply')->default(false);
             $table->timestamps();
 
             $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
