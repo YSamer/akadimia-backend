@@ -73,7 +73,7 @@ class AdminAuthController extends Controller
             $admin->markEmailAsVerified();
             cache()->forget("admin_otp_{$admin->id}");
             $token = $admin->createToken('API Token')->plainTextToken;
-            
+
             return $this->successResponse(['token' => $token, 'admin' => $admin], 'Email verified successfully.');
         }
 
@@ -87,19 +87,26 @@ class AdminAuthController extends Controller
             'password' => 'required|string|min:8',
         ]);
 
-        if (!Auth::guard('admin-session')->attempt($request->only('email', 'password'))) {
+        // Find the admin by email
+        $admin = Auth::guard('admin')->getProvider()->retrieveByCredentials(['email' => $request->email]);
+
+        // Check if the admin exists and the password is correct
+        if (!$admin || !Hash::check($request->password, $admin->password)) {
             return $this->errorResponse('Invalid credentials', null, 401);
         }
 
-        $admin = Auth::guard('admin-session')->user();
-
+        // Check if the admin's email is verified
         if (!$admin->hasVerifiedEmail()) {
             return $this->errorResponse('Please verify your email.', null, 403);
         }
 
+        // Generate a Sanctum token
         $token = $admin->createToken('API Token')->plainTextToken;
 
-        return $this->successResponse(['token' => $token, 'admin' => $admin], 'Login successful');
+        return $this->successResponse([
+            'token' => $token,
+            'admin' => $admin,
+        ], 'Login successful');
     }
 
     public function reSendOtp(Request $request)

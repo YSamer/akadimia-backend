@@ -87,19 +87,26 @@ class TeacherAuthController extends Controller
             'password' => 'required|string|min:8',
         ]);
 
-        if (!Auth::guard('teacher-session')->attempt($request->only('email', 'password'))) {
+        // Find the teacher by email
+        $teacher = Auth::guard('teacher')->getProvider()->retrieveByCredentials(['email' => $request->email]);
+
+        // Check if the teacher exists and the password is correct
+        if (!$teacher || !Hash::check($request->password, $teacher->password)) {
             return $this->errorResponse('Invalid credentials', null, 401);
         }
 
-        $teacher = Auth::guard('teacher-session')->user();
-
+        // Check if the teacher's email is verified
         if (!$teacher->hasVerifiedEmail()) {
             return $this->errorResponse('Please verify your email.', null, 403);
         }
 
+        // Generate a Sanctum token
         $token = $teacher->createToken('API Token')->plainTextToken;
 
-        return $this->successResponse(['token' => $token, 'teacher' => $teacher], 'Login successful');
+        return $this->successResponse([
+            'token' => $token,
+            'teacher' => $teacher,
+        ], 'Login successful');
     }
 
     public function reSendOtp(Request $request)
