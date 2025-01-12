@@ -51,12 +51,12 @@ class UserAuthController extends Controller
 
             DB::commit();
 
-            return $this->successResponse($user, 'Registration successful. Please verify your email.');
+            return $this->successResponse($user, 'تم إنشاء الحساب بنجاح، برجاء تفعيل الإيميل.');
         } catch (\Exception $e) {
             // Rollback the transaction
             DB::rollBack();
             Log::error('Registration Error: ' . $e->getMessage());
-            return $this->errorResponse('Registration failed. Please try again.' . $e->getMessage(), 500);
+            return $this->errorResponse('حدث خطأ، برجاء المحاولة مرة أخرى.' . $e->getMessage(), 500);
         }
     }
 
@@ -105,7 +105,7 @@ class UserAuthController extends Controller
 
         return $this->successResponse(null, 'OTP re-sent to your email.');
     }
-    
+
     public function login(Request $request)
     {
         $request->validate([
@@ -124,12 +124,12 @@ class UserAuthController extends Controller
             $otp = rand(100000, 999999);
             cache()->put("otp_{$user->id}", $otp, 300);
             Mail::to($user->email)->send(new OtpMail($otp, $user));
-            return $this->successResponse(['user' => $user], 'Login successful');
+            return $this->successResponse(['user' => $user], 'تم تسجيل الدخول بنجاح');
         }
 
         $token = $user->createToken('API Token')->plainTextToken;
 
-        return $this->successResponse(['token' => $token, 'user' => $user], 'Login successful');
+        return $this->successResponse(['token' => $token, 'user' => $user], 'تم تسجيل الدخول بنجاح');
     }
 
     public function forgotPassword(Request $request)
@@ -201,7 +201,7 @@ class UserAuthController extends Controller
             return $this->errorResponse('Please verify your email.', null, 403);
         }
 
-        return $this->successResponse(['user' => $user], 'Auto login successful');
+        return $this->successResponse(['user' => $user], 'Auto تم تسجيل الدخول بنجاح');
     }
 
     public function logout(Request $request)
@@ -211,10 +211,21 @@ class UserAuthController extends Controller
         return $this->successResponse(null, 'Logout successful');
     }
 
+    public function profile(Request $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return $this->errorResponse('User not found', null, 404);
+        }
+
+        return $this->successResponse(['user' => $user], 'Auto تم تسجيل الدخول بنجاح');
+    }
+
     public function updateProfile(Request $request)
     {
         $request->validate([
             'name' => 'sometimes|string|max:255',
+            'old_password' => 'sometimes|string|min:8',
             'password' => 'sometimes|string|min:8|confirmed',
             'phone' => 'sometimes|string|max:15|unique:users,phone',
             // 'gender' => 'sometimes|in:male,female',
@@ -234,8 +245,12 @@ class UserAuthController extends Controller
         //     $user->gender = $request->gender;
         if ($request->has('birth_date'))
             $user->birth_date = $request->birth_date;
-        if ($request->has('password'))
-            $user->password = Hash::make($request->password);
+        if ($request->has('old_password') && Hash::check($request->old_password, $user->password)) {
+            if ($request->has('password'))
+                $user->password = Hash::make($request->password);
+        } else {
+            return $this->errorResponse('كلمة المرور القديمة غير صحيحة', null, 400);
+        }
 
         $user->save();
 

@@ -16,7 +16,7 @@ class CreateAchievementsTable extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->json('urls')->nullable();
+            // $table->json('urls')->nullable();
             $table->string('image')->nullable();
             $table->enum('type', ['read', 'write', 'listen', 'watch', 'payment']);
             $table->timestamps();

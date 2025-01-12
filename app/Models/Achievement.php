@@ -12,7 +12,6 @@ class Achievement extends Model
     protected $fillable = [
         'name',
         'description',
-        'urls',
         'image',
         'type',
     ];
@@ -22,9 +21,9 @@ class Achievement extends Model
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'urls' => 'array',
-    ];
+    // protected $casts = [
+    //     'urls' => 'array',
+    // ];
 
     /**
      * The batches that belong to the achievement.
@@ -32,5 +31,10 @@ class Achievement extends Model
     public function batches()
     {
         return $this->belongsToMany(Batch::class, 'batch_achievements');
+    }
+
+    public function urls()
+    {
+        return $this->morphMany(Url::class, 'urlable');
     }
 }

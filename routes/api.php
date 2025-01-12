@@ -30,6 +30,7 @@ Route::prefix('user')->group(function () {
     Route::middleware('auth:user')->group(function () {
         Route::get('auto-login', [UserAuthController::class, 'autoLogin']);
         Route::get('logout', [UserAuthController::class, 'logout']);
+        Route::get('profile', [UserAuthController::class, 'profile']);
         Route::post('update-profile', [UserAuthController::class, 'updateProfile']);
 
         // Batches
@@ -72,6 +73,7 @@ Route::prefix('admin')->group(function () {
     Route::middleware('auth:admin')->group(function () {
         Route::get('auto-login', [AdminAuthController::class, 'autoLogin']);
         Route::get('logout', [AdminAuthController::class, 'logout']);
+        Route::get('profile', [AdminAuthController::class, 'profile']);
         Route::post('update-profile', [AdminAuthController::class, 'updateProfile']);
 
         // Global 
@@ -142,27 +144,49 @@ Route::prefix('teacher')->group(function () {
     Route::middleware('auth:teacher')->group(function () {
         Route::get('auto-login', [TeacherAuthController::class, 'autoLogin']);
         Route::get('logout', [TeacherAuthController::class, 'logout']);
+        Route::get('profile', [TeacherAuthController::class, 'profile']);
         Route::post('update-profile', [TeacherAuthController::class, 'updateProfile']);
 
         // Batches
-        Route::get('batches', [BatchController::class, 'index']);
+        Route::get('batches', [BatchController::class, 'indexAdmin']);
+        Route::get('all-batches', [BatchController::class, 'indexAll']);
         Route::get('batches/{id}', [BatchController::class, 'show']);
         // Route::post('batches/create', [BatchController::class, 'store']);
         // Route::post('batches/update/{id}', [BatchController::class, 'update']);
         // Route::post('batches/delete/{id}', [BatchController::class, 'destroy']);
 
         // Groups
-        Route::get('groups', [GroupController::class, 'index']);
+        Route::get('groups', [GroupController::class, 'indexAdmin']);
+        Route::get('all-groups', [GroupController::class, 'indexAll']);
         Route::get('groups/{id}', [GroupController::class, 'show']);
         // Route::post('groups/create', [GroupController::class, 'store']);
         // Route::post('groups/update/{id}', [GroupController::class, 'update']);
         // Route::post('groups/delete/{id}', [GroupController::class, 'destroy']);
 
-        // Group Configs
-        // Route::get('group-wird-configs', [GroupWirdConfigController::class, 'index']);
-        // Route::get('group-wird-configs/{id}', [GroupWirdConfigController::class, 'show']);
-        // Route::post('group-wird-configs/create', [GroupWirdConfigController::class, 'store']);
-        // Route::post('group-wird-configs/update/{id}', [GroupWirdConfigController::class, 'update']);
-        // Route::post('group-wird-configs/delete/{id}', [GroupWirdConfigController::class, 'destroy']);
+        // Group Wird Configs
+        Route::get('group-wird-configs', [GroupWirdConfigController::class, 'index']);
+        Route::get('group-wird-configs/{id}', [GroupWirdConfigController::class, 'show']);
+        Route::post('group-wird-configs/create', [GroupWirdConfigController::class, 'store']);
+        Route::post('group-wird-configs/update/{id}', [GroupWirdConfigController::class, 'update']);
+        Route::post('group-wird-configs/delete/{id}', [GroupWirdConfigController::class, 'destroy']);
+
+        // Wird 
+        Route::post('set-today-wird', [WirdController::class, 'setTodayWirds']);
+        Route::get('wirds', [WirdController::class, 'index']);
+        Route::get('today-wirds', [WirdController::class, 'todayWirds']);
+        Route::get('today-wirds/{id}', [WirdController::class, 'groupTodayWirds']);
+
+        // Exams
+        Route::get('/get-exams', [ExamController::class, 'getExams']);
+        Route::get('/get-exam/{id}', [ExamController::class, 'getExamDetails']);
+        Route::post('/create-exam', [ExamController::class, 'createExam']);
+        Route::post('/add-questions', [ExamController::class, 'addQuestions']);
+        Route::post('/edit-exam/{id}', [ExamController::class, 'editExam']);
+        Route::post('/delete-question/{id}', [ExamController::class, 'deleteQuestion']);
+        Route::get('/view-responses/{examId}', [ExamController::class, 'viewResponses']);
+
+        // Payments
+        Route::get('/all-payments', [PaymentController::class, 'getAllPayments']);
+        Route::post('/confirm-payment/{id}', [PaymentController::class, 'confirmPayment']);
     });
 });

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\BatchResource;
 use App\Http\Resources\GroupMemberResource;
 use App\Http\Resources\SimpleBatchResource;
+use App\Models\Achievement;
 use App\Models\Group;
 use App\Models\GroupMember;
 
@@ -81,12 +82,14 @@ class BatchController extends Controller
         $request->validate([
             'name' => 'nullable|string',
             'submission_date' => 'required|date',
-            'start_date' => 'nullable|date',
+            'start_date' => 'nullable|date|after_or_equal:submission_date',
             'max_number' => 'required|integer',
             'gender' => 'required|string',
         ]);
 
         $batch = Batch::create($request->all());
+        $achievementIds = Achievement::pluck('id');
+        $batch->achievements()->attach($achievementIds);
 
         return $this->successResponse(new BatchResource($batch), 'تمت إضافة الدفعة بنجاح');
     }

@@ -17,43 +17,58 @@ class AchievementSeeder extends Seeder
             [
                 'name' => 'قراءة الكتاب',
                 'description' => 'قراءة كتاب المئة المانحة لإتقانه كالفاتحة .',
-                'urls' => json_encode(['المئة المانحة لإتقانه كالفاتحة' => 'uploads/books/100 to etqan.pdf']),
+                'urls' => [
+                    ['title' => 'المئة المانحة لإتقانه كالفاتحة', 'url' => 'uploads/books/100 to etqan.pdf', 'type' => 'pdf']
+                ],
                 'image' => 'uploads/images/100 to etqan image.png',
                 'type' => 'read',
             ],
             [
                 'name' => 'سماع السلسة',
                 'description' => 'سماع سلسلة الحصون الخمسة للدكتور سعيد حمزة.',
-                'urls' => json_encode([
-                    'هل أنت حافظ حقا؟' => 'uploads/sounds/hosson khamsa/hosson-01.m4a',
-                    'لماذا نحفظ القرآن؟' => 'uploads/sounds/hosson khamsa/hosson-02.m4a',
-                    'الإخلاص وتحديد الهدف' => 'uploads/sounds/hosson khamsa/hosson-03.m4a',
-                    'أركان الحفظ' => 'uploads/sounds/hosson khamsa/hosson-04.m4a',
-                    'التكرار' => 'uploads/sounds/hosson khamsa/hosson-05.m4a',
-                    'التركيز وعلاج الشرود والسرحان' => 'uploads/sounds/hosson khamsa/hosson-06.m4a',
-                    'التحضير' => 'uploads/sounds/hosson khamsa/hosson-07.m4a',
-                    'الحفظ الجديد' => 'uploads/sounds/hosson khamsa/hosson-08.m4a',
-                    'المراجعة' => 'uploads/sounds/hosson khamsa/hosson-09.m4a',
-                    'مراجعة البعيد' => 'uploads/sounds/hosson khamsa/hosson-10.m4a',
-                    'أركان المراجعة المثمرة' => 'uploads/sounds/hosson khamsa/hosson-11.m4a',
-                    'العناية بالمتشابهات اللفظية' => 'uploads/sounds/hosson khamsa/hosson-12.m4a',
-                    'العناية بالمتشابهات اللفظية 2' => 'uploads/sounds/hosson khamsa/hosson-13.m4a',
-                    'العوائق' => 'uploads/sounds/hosson khamsa/hosson-14.m4a',
-                ]),
+                'urls' => [
+                    ['title' => 'هل أنت حافظ حقا؟', 'url' => 'uploads/sounds/hosson khamsa/hosson-01.m4a', 'type' => 'audio'],
+                    ['title' => 'لماذا نحفظ القرآن؟', 'url' => 'uploads/sounds/hosson khamsa/hosson-02.m4a', 'type' => 'audio'],
+                    ['title' => 'الإخلاص وتحديد الهدف', 'url' => 'uploads/sounds/hosson khamsa/hosson-03.m4a', 'type' => 'audio'],
+                    ['title' => 'أركان الحفظ', 'url' => 'uploads/sounds/hosson khamsa/hosson-04.m4a', 'type' => 'audio'],
+                    ['title' => 'التكرار', 'url' => 'uploads/sounds/hosson khamsa/hosson-05.m4a', 'type' => 'audio'],
+                    ['title' => 'التركيز وعلاج الشرود والسرحان', 'url' => 'uploads/sounds/hosson khamsa/hosson-06.m4a', 'type' => 'audio'],
+                    ['title' => 'التحضير', 'url' => 'uploads/sounds/hosson khamsa/hosson-07.m4a', 'type' => 'audio'],
+                    ['title' => 'الحفظ الجديد', 'url' => 'uploads/sounds/hosson khamsa/hosson-08.m4a', 'type' => 'audio'],
+                    ['title' => 'المراجعة', 'url' => 'uploads/sounds/hosson khamsa/hosson-09.m4a', 'type' => 'audio'],
+                    ['title' => 'مراجعة البعيد', 'url' => 'uploads/sounds/hosson khamsa/hosson-10.m4a', 'type' => 'audio'],
+                    ['title' => 'أركان المراجعة المثمرة', 'url' => 'uploads/sounds/hosson khamsa/hosson-11.m4a', 'type' => 'audio'],
+                    ['title' => 'العناية بالمتشابهات اللفظية', 'url' => 'uploads/sounds/hosson khamsa/hosson-12.m4a', 'type' => 'audio'],
+                    ['title' => 'العناية بالمتشابهات اللفظية 2', 'url' => 'uploads/sounds/hosson khamsa/hosson-13.m4a', 'type' => 'audio'],
+                    ['title' => 'العوائق', 'url' => 'uploads/sounds/hosson khamsa/hosson-14.m4a', 'type' => 'audio'],
+                ],
                 'image' => null,
                 'type' => 'listen',
             ],
             [
                 'name' => 'دفع مصاريف التقديم',
                 'description' => 'دفع مصاريف التقديم 200 ج.م.',
-                'urls' => json_encode(['كاش' => '01000000000', 'انستا باي' => 'eeeeee']),
+                'urls' => [
+                    ['title' => 'انستا باي', 'url' => 'ammarsa3d55', 'type' => 'instapay'],
+                    ['title' => 'انستا باي', 'url' => '01003625246', 'type' => 'instapay'],
+                    ['title' => 'كاش', 'url' => '01143113706', 'type' => 'phone'],
+                ],
                 'image' => null,
                 'type' => 'payment',
             ],
         ];
 
-        foreach ($achievements as $achievement) {
-            Achievement::create($achievement);
+        foreach ($achievements as $achievementData) {
+            $achievement = Achievement::create([
+                'name' => $achievementData['name'],
+                'description' => $achievementData['description'],
+                'image' => $achievementData['image'],
+                'type' => $achievementData['type'],
+            ]);
+
+            foreach ($achievementData['urls'] as $url) {
+                $achievement->urls()->create($url);
+            }
         }
     }
 }

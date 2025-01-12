@@ -49,12 +49,12 @@ class AdminAuthController extends Controller
 
             DB::commit();
 
-            return $this->successResponse($admin, 'Registration successful. Please verify your email.');
+            return $this->successResponse($admin, 'تم إنشاء الحساب بنجاح، برجاء تفعيل الإيميل.');
         } catch (\Exception $e) {
             // Rollback the transaction
             DB::rollBack();
             Log::error('Registration Error: ' . $e->getMessage());
-            return $this->errorResponse('Registration failed. Please try again.' . $e->getMessage(), 500);
+            return $this->errorResponse('حدث خطأ، برجاء المحاولة مرة أخرى.' . $e->getMessage(), 500);
         }
     }
 
@@ -106,7 +106,7 @@ class AdminAuthController extends Controller
         return $this->successResponse([
             'token' => $token,
             'admin' => $admin,
-        ], 'Login successful');
+        ], 'تم تسجيل الدخول بنجاح');
     }
 
     public function reSendOtp(Request $request)
@@ -201,7 +201,7 @@ class AdminAuthController extends Controller
             return $this->errorResponse('Please verify your email.', null, 403);
         }
 
-        return $this->successResponse(['admin' => $admin], 'Auto login successful');
+        return $this->successResponse(['admin' => $admin], 'Auto تم تسجيل الدخول بنجاح');
     }
 
     public function logout(Request $request)
@@ -211,10 +211,22 @@ class AdminAuthController extends Controller
         return $this->successResponse(null, 'Logout successful');
     }
 
+    public function profile(Request $request)
+    {
+        $admin = $request->user('admin');
+        if (!$admin) {
+            return $this->errorResponse('Admin not found', null, 404);
+        }
+
+        return $this->successResponse(['admin' => $admin], 'Auto تم تسجيل الدخول بنجاح');
+    }
+
+
     public function updateProfile(Request $request)
     {
         $request->validate([
             'name' => 'sometimes|string|max:255',
+            'old_password' => 'sometimes|string|min:8',
             'password' => 'sometimes|string|min:8|confirmed',
             'phone' => 'sometimes|string|max:15|unique:admins,phone',
             // 'gender' => 'sometimes|in:male,female',
@@ -234,8 +246,12 @@ class AdminAuthController extends Controller
         //     $admin->gender = $request->gender;
         if ($request->has('birth_date'))
             $admin->birth_date = $request->birth_date;
-        if ($request->has('password'))
-            $admin->password = Hash::make($request->password);
+        if ($request->has('old_password') && Hash::check($request->old_password, $admin->password)) {
+            if ($request->has('password'))
+                $admin->password = Hash::make($request->password);
+        } else {
+            return $this->errorResponse('كلمة المرور القديمة غير صحيحة', null, 400);
+        }
 
         $admin->save();
 

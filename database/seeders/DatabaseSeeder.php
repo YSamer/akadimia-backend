@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call(
             [
-                BatchGroupSeeder::class,
+                // BatchGroupSeeder::class,
                 AchievementSeeder::class,
             ]
         );

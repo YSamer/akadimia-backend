@@ -49,12 +49,12 @@ class TeacherAuthController extends Controller
 
             DB::commit();
 
-            return $this->successResponse($teacher, 'Registration successful. Please verify your email.');
+            return $this->successResponse($teacher, 'تم إنشاء الحساب بنجاح، برجاء تفعيل الإيميل.');
         } catch (\Exception $e) {
             // Rollback the transaction
             DB::rollBack();
             Log::error('Registration Error: ' . $e->getMessage());
-            return $this->errorResponse('Registration failed. Please try again.' . $e->getMessage(), 500);
+            return $this->errorResponse('حدث خطأ، برجاء المحاولة مرة أخرى.' . $e->getMessage(), 500);
         }
     }
 
@@ -106,7 +106,7 @@ class TeacherAuthController extends Controller
         return $this->successResponse([
             'token' => $token,
             'teacher' => $teacher,
-        ], 'Login successful');
+        ], 'تم تسجيل الدخول بنجاح');
     }
 
     public function reSendOtp(Request $request)
@@ -201,7 +201,7 @@ class TeacherAuthController extends Controller
             return $this->errorResponse('Please verify your email.', null, 403);
         }
 
-        return $this->successResponse(['teacher' => $teacher], 'Auto login successful');
+        return $this->successResponse(['teacher' => $teacher], 'Auto تم تسجيل الدخول بنجاح');
     }
 
     public function logout(Request $request)
@@ -211,10 +211,26 @@ class TeacherAuthController extends Controller
         return $this->successResponse(null, 'Logout successful');
     }
 
+    public function profile(Request $request)
+    {
+        $teacher = $request->user('teacher');
+        if (!$teacher) {
+            return $this->errorResponse('Teacher not found', null, 404);
+        }
+
+        if (!$teacher->hasVerifiedEmail()) {
+            return $this->errorResponse('Please verify your email.', null, 403);
+        }
+
+        return $this->successResponse(['teacher' => $teacher], 'Auto تم تسجيل الدخول بنجاح');
+    }
+
+
     public function updateProfile(Request $request)
     {
         $request->validate([
             'name' => 'sometimes|string|max:255',
+            'old_password' => 'sometimes|string|min:8',
             'password' => 'sometimes|string|min:8|confirmed',
             'phone' => 'sometimes|string|max:15|unique:teachers,phone',
             // 'gender' => 'sometimes|in:male,female',
@@ -234,8 +250,14 @@ class TeacherAuthController extends Controller
         //     $teacher->gender = $request->gender;
         if ($request->has('birth_date'))
             $teacher->birth_date = $request->birth_date;
-        if ($request->has('password'))
-            $teacher->password = Hash::make($request->password);
+        if ($request->has('old_password') && Hash::check($request->old_password, $teacher->password)) {
+            if ($request->has('password'))
+                $teacher->password = Hash::make($request->password);
+        } else {
+            return $this->errorResponse('كلمة المرور القديمة غير صحيحة', null, 400);
+        }
+        // if ($request->has('password'))
+        //     $teacher->password = Hash::make($request->password);
 
         $teacher->save();
 
