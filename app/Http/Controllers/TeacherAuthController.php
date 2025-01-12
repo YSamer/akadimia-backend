@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Number;
 
 class TeacherAuthController extends Controller
@@ -27,11 +28,18 @@ class TeacherAuthController extends Controller
             'name' => 'required|string|max:255',
             'gender' => 'required|in:male,female',
             'birth_date' => 'required|date',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         DB::beginTransaction();
 
         try {
+
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('uploads/profile');
+                $request->merge(['image' => $imagePath]);
+            }
+
             $teacher = Teacher::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -39,6 +47,7 @@ class TeacherAuthController extends Controller
                 'password' => Hash::make($request->password),
                 'gender' => $request->gender,
                 'birth_date' => $request->birth_date,
+                'image' => $request->image,
             ]);
 
             $otp = rand(100000, 999999);
@@ -235,6 +244,7 @@ class TeacherAuthController extends Controller
             'phone' => 'sometimes|string|max:15|unique:teachers,phone',
             // 'gender' => 'sometimes|in:male,female',
             'birth_date' => 'sometimes|date',
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ]);
 
@@ -258,6 +268,15 @@ class TeacherAuthController extends Controller
         }
         // if ($request->has('password'))
         //     $teacher->password = Hash::make($request->password);
+
+        if ($request->hasFile('image')) {
+            if ($teacher->image) {
+                Storage::delete($teacher->image);
+            }
+
+            $path = $request->file('image')->store('uploads/profile');
+            $teacher->image = $path;
+        }
 
         $teacher->save();
 

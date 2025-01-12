@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class UserAuthController extends Controller
 {
@@ -32,9 +33,15 @@ class UserAuthController extends Controller
             'name' => 'required|string|max:255',
             'gender' => 'required|in:male,female',
             'birth_date' => 'required|date',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         DB::beginTransaction();
         try {
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('uploads/profile');
+                $request->merge(['image' => $imagePath]);
+            }
+
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -42,6 +49,7 @@ class UserAuthController extends Controller
                 'password' => Hash::make($request->password),
                 'gender' => $request->gender,
                 'birth_date' => $request->birth_date,
+                'image' => $request->image,
             ]);
 
             cache()->forget("otp_{$user->id}");
@@ -230,7 +238,7 @@ class UserAuthController extends Controller
             'phone' => 'sometimes|string|max:15|unique:users,phone',
             // 'gender' => 'sometimes|in:male,female',
             'birth_date' => 'sometimes|date',
-
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $user = $request->user();
@@ -250,6 +258,15 @@ class UserAuthController extends Controller
                 $user->password = Hash::make($request->password);
         } else {
             return $this->errorResponse('كلمة المرور القديمة غير صحيحة', null, 400);
+        }
+
+        if ($request->hasFile('image')) {
+            if ($user->image) {
+                Storage::delete($user->image);
+            }
+
+            $path = $request->file('image')->store('uploads/profile_pictures');
+            $user->image = $path;
         }
 
         $user->save();
