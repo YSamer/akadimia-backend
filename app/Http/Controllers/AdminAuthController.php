@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Mail\OtpMail;
 use App\Models\Admin;
+use App\Models\Teacher;
+use App\Models\User;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -273,5 +275,150 @@ class AdminAuthController extends Controller
         $admin->save();
 
         return $this->successResponse($admin, 'Profile updated successfully');
+    }
+
+    public function createAdmin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email|max:255|unique:admins,email',
+            'phone' => 'required|string|max:15|unique:admins,phone',
+            'password' => 'required|string|min:8|confirmed',
+            'name' => 'required|string|max:255',
+            'gender' => 'required|in:male,female',
+            'birth_date' => 'required|date',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('uploads/profile');
+                $request->merge(['image' => $imagePath]);
+            }
+
+            $admin = Admin::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'password' => Hash::make($request->password),
+                'gender' => $request->gender,
+                'birth_date' => $request->birth_date,
+                'image' => $request->image,
+                'email_verified_at' => now(),
+            ]);
+
+            // $otp = rand(100000, 999999);
+
+            // cache()->put("admin_otp_{$admin->id}", $otp, 300);
+
+            // Mail::to($admin->email)->send(new OtpMail($otp, $admin));
+
+            DB::commit();
+
+            return $this->successResponse($admin, 'تم إنشاء الحساب بنجاح.');
+        } catch (\Exception $e) {
+            // Rollback the transaction
+            DB::rollBack();
+            Log::error('Registration Error: ' . $e->getMessage());
+            return $this->errorResponse('حدث خطأ، برجاء المحاولة مرة أخرى.' . $e->getMessage(), 500);
+        }
+    }
+    public function createTeacher(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email|max:255|unique:teachers,email',
+            'phone' => 'required|string|max:15|unique:teachers,phone',
+            'password' => 'required|string|min:8|confirmed',
+            'name' => 'required|string|max:255',
+            'gender' => 'required|in:male,female',
+            'birth_date' => 'required|date',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('uploads/profile');
+                $request->merge(['image' => $imagePath]);
+            }
+
+            $teacher = Teacher::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'password' => Hash::make($request->password),
+                'gender' => $request->gender,
+                'birth_date' => $request->birth_date,
+                'image' => $request->image,
+                'email_verified_at' => now(),
+            ]);
+
+            // $otp = rand(100000, 999999);
+
+            // cache()->put("admin_otp_{$admin->id}", $otp, 300);
+
+            // Mail::to($admin->email)->send(new OtpMail($otp, $admin));
+
+            DB::commit();
+
+            return $this->successResponse($teacher, 'تم إنشاء الحساب بنجاح.');
+        } catch (\Exception $e) {
+            // Rollback the transaction
+            DB::rollBack();
+            Log::error('Registration Error: ' . $e->getMessage());
+            return $this->errorResponse('حدث خطأ، برجاء المحاولة مرة أخرى.' . $e->getMessage(), 500);
+        }
+    }
+    public function createStudent(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'phone' => 'required|string|max:15|unique:users,phone',
+            'password' => 'required|string|min:8|confirmed',
+            'name' => 'required|string|max:255',
+            'gender' => 'required|in:male,female',
+            'birth_date' => 'required|date',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('uploads/profile');
+                $request->merge(['image' => $imagePath]);
+            }
+
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'password' => Hash::make($request->password),
+                'gender' => $request->gender,
+                'birth_date' => $request->birth_date,
+                'image' => $request->image,
+                'email_verified_at' => now(),
+            ]);
+
+            // $otp = rand(100000, 999999);
+
+            // cache()->put("admin_otp_{$admin->id}", $otp, 300);
+
+            // Mail::to($admin->email)->send(new OtpMail($otp, $admin));
+
+            DB::commit();
+
+            return $this->successResponse($user, 'تم إنشاء الحساب بنجاح.');
+        } catch (\Exception $e) {
+            // Rollback the transaction
+            DB::rollBack();
+            Log::error('Registration Error: ' . $e->getMessage());
+            return $this->errorResponse('حدث خطأ، برجاء المحاولة مرة أخرى.' . $e->getMessage(), 500);
+        }
     }
 }

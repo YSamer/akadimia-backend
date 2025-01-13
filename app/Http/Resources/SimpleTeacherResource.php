@@ -22,7 +22,7 @@ class SimpleTeacherResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'image' => $this->image,
+            'image' => $this->image ? asset('storage/' . $this->image) : null,
             'is_exist' => $group ? $group->members()->where('member_id', $this->id)->exists() : null,
         ];
     }

@@ -75,6 +75,9 @@ Route::prefix('admin')->group(function () {
         Route::get('logout', [AdminAuthController::class, 'logout']);
         Route::get('profile', [AdminAuthController::class, 'profile']);
         Route::post('update-profile', [AdminAuthController::class, 'updateProfile']);
+        Route::post('create-admin', [AdminAuthController::class, 'createAdmin']);
+        Route::post('create-teacher', [AdminAuthController::class, 'createTeacher']);
+        Route::post('create-student', [AdminAuthController::class, 'createStudent']);
 
         // Global 
         Route::get('all-users', [AppController::class, 'allUsers']);
