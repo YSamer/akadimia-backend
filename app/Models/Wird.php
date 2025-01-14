@@ -26,6 +26,12 @@ class Wird extends Model
         'end_to',
         'file_path',
         'url',
+        'description',
+        'section_type',
+        'wird_type',
+        'under_wird',
+        'grade',
+        'sanction',
     ];
 
     // Define the relationships

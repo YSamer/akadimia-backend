@@ -18,6 +18,13 @@ return new class extends Migration {
             $table->unsignedBigInteger('group_wird_config_id')->nullable();
             $table->date('date');
             $table->string('title')->nullable();
+            $table->longText('description')->nullable();
+            $table->enum('section_type', array_column(SectionType::cases(), 'value')); // ->change to update
+            $table->enum('wird_type', array_column(WirdType::cases(), 'value'));
+            $table->unsignedBigInteger('under_wird')->nullable(); //تابع لورد آخر
+            $table->integer('grade')->default(1); // الدرجات
+            $table->integer('sanction')->default(1); // العقوبات
+
             $table->integer('start_from')->nullable();
             $table->integer('end_to')->nullable();
             // Attachment

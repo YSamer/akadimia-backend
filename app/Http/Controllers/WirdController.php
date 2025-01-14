@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\SectionType;
+use App\Enums\WirdType;
 use App\Http\Resources\WirdDoneResource;
 use Illuminate\Http\Request;
 use App\Http\Resources\GroupWirdConfigResource;
@@ -30,15 +32,29 @@ class WirdController extends Controller
 
     public function setTodayWirds(Request $request)
     {
-        $group_id = $request->input('group_id');
+        $validated = $request->validate([
+            'group_id' => 'required|exists:groups,id',
+
+            'wirds' => 'nullable|array',
+            'wirds.*.title' => 'nullable|string',
+            'wirds.*.description' => 'nullable|string',
+            'wirds.*.section_type' => 'required|in:' . implode(',', array_column(SectionType::cases(), 'value')),
+            'wirds.*.wird_type' => 'required|in:' . implode(',', array_column(WirdType::cases(), 'value')),
+            'wirds.*.under_wird' => 'nullable|exists:group_wird_configs,id',
+            'wirds.*.grade' => 'required|integer|min:1',
+            'wirds.*.sanction' => 'required|integer|min:1',
+            'wirds.*.start_from' => 'required|integer',
+            'wirds.*.end_to' => 'nullable|integer',
+        ]);
+
         // $today = now()->format('Y-m-d');
         $dayName = now()->dayName;
 
         $configs = GroupWirdConfig::
             whereJsonContains('days', strtolower($dayName))
             ->get();
-        if ($group_id) {
-            $configs = $configs->where('group_id', $group_id);
+        if ($request->group_id) {
+            $configs = $configs->where('group_id', $request->group_id);
         }
 
         if ($configs->isEmpty()) {
@@ -62,6 +78,14 @@ class WirdController extends Controller
                     'group_wird_config_id' => $config->id,
                     'date' => now()->format('Y-m-d'),
                     'title' => $config->title,
+                    // 
+                    'description' => $config->description,
+                    'section_type' => $config->section_type,
+                    'wird_type' => $config->wird_type,
+                    'under_wird' => $config->under_wird,
+                    'grade' => $config->grade,
+                    'sanction' => $config->sanction,
+                    // 
                     'start_from' => $config->start_from,
                     'end_to' => $config->end_to,
                     // 'file_path' => 
@@ -81,6 +105,27 @@ class WirdController extends Controller
                     $config->save();
                 }
             }
+
+            // Process Custom Wirds from Request
+            if (!empty($validated['wirds'])) {
+                foreach ($validated['wirds'] as $wird) {
+                    Wird::create([
+                        'group_id' => $validated['group_id'],
+                        'group_wird_config_id' => null,
+                        'date' => now()->toDateString(),
+                        'title' => $wird['title'] ?? null,
+                        'description' => $wird['description'] ?? null,
+                        'section_type' => $wird['section_type'],
+                        'wird_type' => $wird['wird_type'],
+                        'under_wird' => $wird['under_wird'] ?? null,
+                        'grade' => $wird['grade'] ?? null,
+                        'sanction' => $wird['sanction'] ?? null,
+                        'start_from' => $wird['start_from'] ?? null,
+                        'end_to' => $wird['end_to'] ?? null,
+                    ]);
+                }
+            }
+
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
