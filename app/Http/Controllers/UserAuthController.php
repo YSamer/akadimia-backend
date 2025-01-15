@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\OtpMail;
 use App\Models\User;
 use App\Traits\APIResponse;
+use App\Traits\PushNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Storage;
 
 class UserAuthController extends Controller
 {
-    use APIResponse;
+    use APIResponse, PushNotification;
 
     public function register(Request $request)
     {
@@ -34,6 +35,7 @@ class UserAuthController extends Controller
             'gender' => 'required|in:male,female',
             'birth_date' => 'required|date',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'device_token' => 'nullable|string',
         ]);
         DB::beginTransaction();
         try {
@@ -50,6 +52,7 @@ class UserAuthController extends Controller
                 'gender' => $request->gender,
                 'birth_date' => $request->birth_date,
                 'image' => $request->image,
+                'device_token' => $request->device_token,
             ]);
 
             cache()->forget("otp_{$user->id}");
@@ -119,6 +122,7 @@ class UserAuthController extends Controller
         $request->validate([
             'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:8',
+            'device_token' => 'nullable|string',
         ]);
 
         if (!Auth::attempt($request->only('email', 'password'))) {
@@ -135,6 +139,8 @@ class UserAuthController extends Controller
             return $this->successResponse(['user' => $user], 'تم تسجيل الدخول بنجاح');
         }
 
+        $user->device_token = $request->device_token;
+        $user->save();
         $token = $user->createToken('API Token')->plainTextToken;
 
         return $this->successResponse(['token' => $token, 'user' => $user], 'تم تسجيل الدخول بنجاح');
@@ -272,5 +278,10 @@ class UserAuthController extends Controller
         $user->save();
 
         return $this->successResponse($user, 'Profile updated successfully');
+    }
+
+    public function notify()
+    {
+        return response()->json($this->sendNotification('d34Wuxm1SDKNvZmk6MwB3F:APA91bGXEfCnvclTI-8MpEX4sFaVoHAiMnF6OedIX4wEcJ0NyvbYNhTUy-VaiVMnMTleAfFxQzGNWLMmznlSXS6ixnQMWK_YAGEh-CwWiE6eMGmrC8du8vo', 'Profile updated successfully', 'edit', ['id' => 'd34Wuxm1SDKNvZmk']));
     }
 }

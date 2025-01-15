@@ -29,6 +29,7 @@ class TeacherAuthController extends Controller
             'gender' => 'required|in:male,female',
             'birth_date' => 'required|date',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'device_token' => 'nullable|string',
         ]);
 
         DB::beginTransaction();
@@ -48,6 +49,7 @@ class TeacherAuthController extends Controller
                 'gender' => $request->gender,
                 'birth_date' => $request->birth_date,
                 'image' => $request->image,
+                'device_token' => $request->device_token,
             ]);
 
             $otp = rand(100000, 999999);
@@ -94,6 +96,7 @@ class TeacherAuthController extends Controller
         $request->validate([
             'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:8',
+            'device_token' => 'nullable|string',
         ]);
 
         // Find the teacher by email
@@ -109,7 +112,8 @@ class TeacherAuthController extends Controller
             return $this->errorResponse('Please verify your email.', null, 403);
         }
 
-        // Generate a Sanctum token
+        $teacher->device_token = $request->device_token;
+        $teacher->save();
         $token = $teacher->createToken('API Token')->plainTextToken;
 
         return $this->successResponse([

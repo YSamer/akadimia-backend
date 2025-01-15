@@ -28,7 +28,10 @@ class Teacher extends Authenticatable implements MustVerifyEmail
         'role',
         'birth_date',
         'is_active',
+        'device_token',
     ];
+
+    protected $guard = 'teacher';
 
     /**
      * The attributes that should be hidden for serialization.
@@ -38,6 +41,7 @@ class Teacher extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
+        'device_token',
     ];
 
     /**

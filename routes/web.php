@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\UserAuthController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -22,3 +24,5 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/send-notification', [UserAuthController::class, 'notify']);

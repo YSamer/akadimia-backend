@@ -31,6 +31,7 @@ class AdminAuthController extends Controller
             'gender' => 'required|in:male,female',
             'birth_date' => 'required|date',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'device_token' => 'nullable|string',
         ]);
 
         DB::beginTransaction();
@@ -50,6 +51,7 @@ class AdminAuthController extends Controller
                 'gender' => $request->gender,
                 'birth_date' => $request->birth_date,
                 'image' => $request->image,
+                'device_token' => $request->device_token,
             ]);
 
             $otp = rand(100000, 999999);
@@ -96,6 +98,7 @@ class AdminAuthController extends Controller
         $request->validate([
             'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:8',
+            'device_token' => 'nullable|string',
         ]);
 
         // Find the admin by email
@@ -109,6 +112,12 @@ class AdminAuthController extends Controller
         // Check if the admin's email is verified
         if (!$admin->hasVerifiedEmail()) {
             return $this->errorResponse('Please verify your email.', null, 403);
+        }
+
+        // Update the device token
+        if ($request->device_token) {
+            $admin->device_token = $request->device_token;
+            $admin->save();
         }
 
         // Generate a Sanctum token

@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->timestamp('phone_verified_at')->nullable();
             $table->string('password');
             $table->string('image')->nullable();
+            $table->string('device_token')->nullable();
             $table->enum('gender', ['male', 'female']);
             $table->date('birth_date');
             $table->enum('role', ['lader', 'student'])->default('student');

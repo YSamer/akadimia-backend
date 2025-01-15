@@ -28,6 +28,7 @@ class Admin extends Authenticatable implements MustVerifyEmail
         'role',
         'birth_date',
         'is_active',
+        'device_token',
     ];
     
     protected $guard = 'admin';
@@ -40,6 +41,7 @@ class Admin extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
+        'device_token',
     ];
 
     /**
