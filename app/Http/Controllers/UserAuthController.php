@@ -286,7 +286,7 @@ class UserAuthController extends Controller
             $user->device_token,
             'Profile updated successfully',
             'edit',
-            ['type' => 'test']
+            ['type' => 'test'],
         ));
     }
 }

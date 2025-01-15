@@ -9,6 +9,7 @@ use App\Http\Controllers\AppController;
 use App\Http\Controllers\BatchApplyController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\GroupWirdConfigController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TeacherAuthController;
 use App\Http\Controllers\WirdController;
@@ -132,6 +133,12 @@ Route::prefix('admin')->group(function () {
         // Payments
         Route::get('/all-payments', [PaymentController::class, 'getAllPayments']);
         Route::post('/confirm-payment/{id}', [PaymentController::class, 'confirmPayment']);
+
+        // Notifications
+        Route::get('/get-notifications', [NotificationController::class, 'getNotifications']);
+        Route::post('/read-notification/{id}', [NotificationController::class, 'readNotification']);
+        // Route::post('/delete-notification/{id}', [NotificationController::class, 'deleteNotification']);
+        Route::post('/create-notification', [NotificationController::class, 'createNotification']);
     });
 });
 

@@ -143,4 +143,14 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->morphMany(Exam::class, 'forwardable');
     }
+
+    public function allNotifications()
+    {
+        return $this->morphMany(Notification::class, 'user');
+    }
+    
+    public function unreadedNotifications()
+    {
+        return $this->allNotifications()->where('read_at', null);
+    }
 }

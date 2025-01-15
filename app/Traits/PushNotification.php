@@ -40,6 +40,40 @@ trait PushNotification
         }
     }
 
+    public function pushNotification($notification)
+    {
+        $deviceToken = $notification->user->device_token;
+        $title = $notification->title;
+        $body = $notification->body;
+        $data = ['id' => $notification->id];
+
+        $url = 'https://fcm.googleapis.com/v1/projects/akadimia-app/messages:send';
+
+        $notification = [
+            "message" => [
+                "token" => $deviceToken,
+                "notification" => [
+                    "title" => $title,
+                    "body" => $body,
+                ],
+                "data" => $data,
+            ]
+        ];
+
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->getAccessToken(),
+                'Content-Type' => 'application/json',
+            ])->post($url, $notification);
+
+            return $response->json();
+        } catch (Exception $e) {
+            // Handle error...
+            Log::error('Error sending notification');
+            return false;
+        }
+    }
+
     public function getAccessToken()
     {
         $keyPath = config('services.firebase.key_path');

@@ -30,7 +30,7 @@ class Admin extends Authenticatable implements MustVerifyEmail
         'is_active',
         'device_token',
     ];
-    
+
     protected $guard = 'admin';
 
     /**
@@ -118,5 +118,15 @@ class Admin extends Authenticatable implements MustVerifyEmail
     public function exams()
     {
         return $this->hasMany(Exam::class);
+    }
+
+    public function allNotifications()
+    {
+        return $this->morphMany(Notification::class, 'user');
+    }
+
+    public function unreadedNotifications()
+    {
+        return $this->allNotifications()->where('read_at', null);
     }
 }

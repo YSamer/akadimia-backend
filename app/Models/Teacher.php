@@ -114,4 +114,13 @@ class Teacher extends Authenticatable implements MustVerifyEmail
     {
         return $query->where('is_active', true);
     }
+
+    public function allNotifications()
+    {
+        return $this->morphMany(Notification::class, 'user');
+    }
+    public function unreadedNotifications()
+    {
+        return $this->allNotifications()->where('read_at', null);
+    }
 }
