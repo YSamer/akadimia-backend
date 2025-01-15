@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\TeacherAuthController;
 use App\Http\Controllers\UserAuthController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -25,4 +27,6 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/send-notification', [UserAuthController::class, 'notify']);
+Route::get('/send-admin-notification/{admin}', [AdminAuthController::class, 'notify']);
+Route::get('/send-teacher-notification/{teacher}', [TeacherAuthController::class, 'notify']);
+Route::get('/send-user-notification/{user}', [UserAuthController::class, 'notify']);

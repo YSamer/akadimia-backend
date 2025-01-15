@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\OtpMail;
 use App\Models\Teacher;
 use App\Traits\APIResponse;
+use App\Traits\PushNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +18,7 @@ use Illuminate\Support\Number;
 
 class TeacherAuthController extends Controller
 {
-    use APIResponse;
+    use APIResponse, PushNotification;
 
     public function register(Request $request)
     {
@@ -285,5 +286,16 @@ class TeacherAuthController extends Controller
         $teacher->save();
 
         return $this->successResponse($teacher, 'Profile updated successfully');
+    }
+
+
+    public function notify(Teacher $teacher)
+    {
+        return response()->json($this->sendNotification(
+            $teacher->device_token,
+            'Profile updated successfully',
+            'edit',
+            ['type' => 'test']
+        ));
     }
 }

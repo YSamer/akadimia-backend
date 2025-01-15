@@ -280,8 +280,13 @@ class UserAuthController extends Controller
         return $this->successResponse($user, 'Profile updated successfully');
     }
 
-    public function notify()
+    public function notify(User $user)
     {
-        return response()->json($this->sendNotification('d34Wuxm1SDKNvZmk6MwB3F:APA91bGXEfCnvclTI-8MpEX4sFaVoHAiMnF6OedIX4wEcJ0NyvbYNhTUy-VaiVMnMTleAfFxQzGNWLMmznlSXS6ixnQMWK_YAGEh-CwWiE6eMGmrC8du8vo', 'Profile updated successfully', 'edit', ['id' => 'd34Wuxm1SDKNvZmk']));
+        return response()->json($this->sendNotification(
+            $user->device_token,
+            'Profile updated successfully',
+            'edit',
+            ['type' => 'test']
+        ));
     }
 }

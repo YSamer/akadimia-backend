@@ -7,6 +7,7 @@ use App\Models\Admin;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Traits\APIResponse;
+use App\Traits\PushNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,7 @@ use Illuminate\Support\Number;
 
 class AdminAuthController extends Controller
 {
-    use APIResponse;
+    use APIResponse, PushNotification;
 
     public function register(Request $request)
     {
@@ -429,5 +430,16 @@ class AdminAuthController extends Controller
             Log::error('Registration Error: ' . $e->getMessage());
             return $this->errorResponse('حدث خطأ، برجاء المحاولة مرة أخرى.' . $e->getMessage(), 500);
         }
+    }
+
+
+    public function notify(Admin $admin)
+    {
+        return response()->json($this->sendNotification(
+            $admin->device_token,
+            'Profile updated successfully',
+            'edit',
+            ['type' => 'test']
+        ));
     }
 }
