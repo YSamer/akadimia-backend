@@ -38,7 +38,7 @@ class NotificationController extends Controller
         }
         $notification->markAsRead();
 
-        return $this->successResponse(new NotificationResource($notification), 'Notification marked as read successfully.');
+        return $this->successResponse(new NotificationResource($notification), 'الإشعار مقروء.');
     }
 
     public function markAllAsRead()
@@ -68,7 +68,19 @@ class NotificationController extends Controller
             $userType,
         );
 
-        return $this->successResponse(new NotificationResource($notification), 'Notification created successfully.');
+        return $this->successResponse(new NotificationResource($notification), 'تم إنشاء الإشعار.');
+    }
+
+    public function deleteNotification(Request $request, $id)
+    {
+        $guard = Auth::getDefaultDriver();
+        $notification = Auth::guard($guard)->user()->allNotifications()->where('id', $id)->first();
+        if (!$notification) {
+            return $this->errorResponse('Not found', 404);
+        }
+        $notification->delete();
+
+        return $this->successResponse([], 'تم حذف الإشعار.');
     }
 
     public function create($title, $body, $user_id, $user_type)

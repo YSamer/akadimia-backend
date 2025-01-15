@@ -137,7 +137,7 @@ Route::prefix('admin')->group(function () {
         // Notifications
         Route::get('/get-notifications', [NotificationController::class, 'getNotifications']);
         Route::post('/read-notification/{id}', [NotificationController::class, 'readNotification']);
-        // Route::post('/delete-notification/{id}', [NotificationController::class, 'deleteNotification']);
+        Route::post('/delete-notification/{id}', [NotificationController::class, 'deleteNotification']);
         Route::post('/create-notification', [NotificationController::class, 'createNotification']);
     });
 });
