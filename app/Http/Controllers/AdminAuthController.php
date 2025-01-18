@@ -107,12 +107,12 @@ class AdminAuthController extends Controller
 
         // Check if the admin exists and the password is correct
         if (!$admin || !Hash::check($request->password, $admin->password)) {
-            return $this->errorResponse('Invalid credentials', null, 401);
+            return $this->errorResponse('بيانات الدخول غير صحيحة', null, 401);
         }
 
         // Check if the admin's email is verified
         if (!$admin->hasVerifiedEmail()) {
-            return $this->errorResponse('Please verify your email.', null, 403);
+            return $this->errorResponse('برجاء تفعيل الحساب.', 2, 403);
         }
 
         // Update the device token
@@ -219,7 +219,7 @@ class AdminAuthController extends Controller
         }
 
         if (!$admin->hasVerifiedEmail()) {
-            return $this->errorResponse('Please verify your email.', null, 403);
+            return $this->errorResponse('برجاء تفعيل الحساب.', null, 403);
         }
 
         return $this->successResponse(['admin' => $admin], 'Auto تم تسجيل الدخول بنجاح');

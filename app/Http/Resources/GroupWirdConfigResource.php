@@ -18,7 +18,7 @@ class GroupWirdConfigResource extends JsonResource
             'id' => $this->id,
             'group_id' => $this->group_id,
             'group' => new GroupResource($this->whenLoaded('group')), // Include related group if loaded
-            'title' => $this->title,
+            'title' => $this->getTitle(),
             'description' => $this->description,
             'section_type' => $this->section_type,
             'wird_type' => $this->wird_type,

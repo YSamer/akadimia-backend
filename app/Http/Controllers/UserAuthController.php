@@ -126,7 +126,7 @@ class UserAuthController extends Controller
         ]);
 
         if (!Auth::attempt($request->only('email', 'password'))) {
-            return $this->errorResponse('Invalid credentials', null, 401);
+            return $this->errorResponse('بيانات الدخول غير صحيحة', null, 401);
         }
 
         $user = Auth::user();
@@ -212,7 +212,7 @@ class UserAuthController extends Controller
         }
 
         if (!$user->hasVerifiedEmail()) {
-            return $this->errorResponse('Please verify your email.', null, 403);
+            return $this->errorResponse('برجاء تفعيل الحساب.', null, 403);
         }
 
         return $this->successResponse(['user' => $user], 'Auto تم تسجيل الدخول بنجاح');

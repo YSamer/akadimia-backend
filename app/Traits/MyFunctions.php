@@ -57,11 +57,11 @@ trait MyFunctions
             17 => 'السابع عشر',
             18 => 'الثامن عشر',
             19 => 'التاسع عشر',
-            20 => 'العشرون'
+            20 => 'العشرون',
         ];
 
         if ($number <= 20) {
-            return $arabicNumbers[$number];
+            return $arabicNumbers[$number] ?? '';
         }
 
         $tens = (int) ($number / 10) * 10;

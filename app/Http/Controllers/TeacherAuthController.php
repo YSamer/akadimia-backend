@@ -105,12 +105,12 @@ class TeacherAuthController extends Controller
 
         // Check if the teacher exists and the password is correct
         if (!$teacher || !Hash::check($request->password, $teacher->password)) {
-            return $this->errorResponse('Invalid credentials', null, 401);
+            return $this->errorResponse('بيانات الدخول غير صحيحة', null, 401);
         }
 
         // Check if the teacher's email is verified
         if (!$teacher->hasVerifiedEmail()) {
-            return $this->errorResponse('Please verify your email.', null, 403);
+            return $this->errorResponse('برجاء تفعيل الحساب.', 2, 403);
         }
 
         $teacher->device_token = $request->device_token;
@@ -212,7 +212,7 @@ class TeacherAuthController extends Controller
         }
 
         if (!$teacher->hasVerifiedEmail()) {
-            return $this->errorResponse('Please verify your email.', null, 403);
+            return $this->errorResponse('برجاء تفعيل الحساب.', null, 403);
         }
 
         return $this->successResponse(['teacher' => $teacher], 'Auto تم تسجيل الدخول بنجاح');
@@ -233,7 +233,7 @@ class TeacherAuthController extends Controller
         }
 
         if (!$teacher->hasVerifiedEmail()) {
-            return $this->errorResponse('Please verify your email.', null, 403);
+            return $this->errorResponse('برجاء تفعيل الحساب.', null, 403);
         }
 
         return $this->successResponse(['teacher' => $teacher], 'Auto تم تسجيل الدخول بنجاح');

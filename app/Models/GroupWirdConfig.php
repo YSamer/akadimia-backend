@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+use App\Enums\SectionType;
+use App\Enums\WirdType;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class GroupWirdConfig extends Model
 {
+    use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -107,5 +112,18 @@ class GroupWirdConfig extends Model
         }
 
         return $result;
+    }
+
+    /**
+     * Get title the Wird.
+     */
+    public function getTitle()
+    {
+        if ($this->title)
+            return trim($this->title);
+        $sectionTypeName = SectionType::from($this->section_type)->arabicName();
+        $wirdTypeName = WirdType::from($this->wird_type)->arabicName();
+
+        return $wirdTypeName . ' ' . $sectionTypeName;
     }
 }

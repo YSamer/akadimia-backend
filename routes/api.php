@@ -60,6 +60,12 @@ Route::prefix('user')->group(function () {
         // Payment 
         Route::post('/achieve-payment', [PaymentController::class, 'achievePayment']);
         Route::post('/create-payment', [PaymentController::class, 'createPayment']);
+
+        // Notifications
+        Route::get('/get-notifications', [NotificationController::class, 'getNotifications']);
+        Route::post('/read-notification/{id}', [NotificationController::class, 'readNotification']);
+        Route::post('/delete-notification/{id}', [NotificationController::class, 'deleteNotification']);
+
     });
 });
 Route::prefix('admin')->group(function () {
@@ -198,5 +204,11 @@ Route::prefix('teacher')->group(function () {
         // Payments
         Route::get('/all-payments', [PaymentController::class, 'getAllPayments']);
         Route::post('/confirm-payment/{id}', [PaymentController::class, 'confirmPayment']);
+
+        // Notifications
+        Route::get('/get-notifications', [NotificationController::class, 'getNotifications']);
+        Route::post('/read-notification/{id}', [NotificationController::class, 'readNotification']);
+        Route::post('/delete-notification/{id}', [NotificationController::class, 'deleteNotification']);
+
     });
 });

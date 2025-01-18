@@ -27,7 +27,7 @@ class ExamController extends Controller
             'forwardable_id' => 'required|integer',
             'start_time' => 'nullable|date_format:Y-m-d H:i:s',
             'end_time' => 'nullable|date_format:Y-m-d H:i:s|after:start_time',
-            'is_apply' => 'nullable|boolean,default:false',
+            'is_apply' => 'nullable|boolean',
         ]);
 
         $model = "App\\Models\\" . $request->forwardable_type;
@@ -48,7 +48,7 @@ class ExamController extends Controller
             'forwardable_id' => $request->forwardable_id,
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
-            'is_apply' => $request->is_apply,
+            'is_apply' => $request->is_apply ?? false,
         ]);
 
         return $this->successResponse(new ExamResource($exam), 'تم إنشاء الإختبار بنجاح');
@@ -63,7 +63,7 @@ class ExamController extends Controller
             'forwardable_id' => 'sometimes|required|integer',
             'start_time' => 'nullable|date_format:Y-m-d H:i:s',
             'end_time' => 'nullable|date_format:Y-m-d H:i:s|after:start_time',
-            'is_apply' => 'nullable|boolean,default:false',
+            'is_apply' => 'nullable|boolean',
         ]);
 
         $exam = Exam::find($id);

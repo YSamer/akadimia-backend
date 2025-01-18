@@ -83,6 +83,8 @@ class GroupController extends Controller
 
         $group = Group::create($data);
 
+        $group->createDefaultWirds();
+
         return $this->successResponse(new GroupResource($group), 'تمت إضافة المجموعة بنجاح');
     }
 

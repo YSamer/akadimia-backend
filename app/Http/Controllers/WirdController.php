@@ -35,6 +35,8 @@ class WirdController extends Controller
         $validated = $request->validate([
             'group_id' => 'required|exists:groups,id',
 
+            'config_wirds' => 'nullable|array',
+            'config_wirds.*.id' => 'required|exists:group_wird_configs,id',
             'wirds' => 'nullable|array',
             'wirds.*.title' => 'nullable|string',
             'wirds.*.description' => 'nullable|string',
@@ -57,13 +59,22 @@ class WirdController extends Controller
             $configs = $configs->where('group_id', $request->group_id);
         }
 
-        if ($configs->isEmpty()) {
+        $configWirdIds = collect($validated['config_wirds'] ?? [])->pluck('id');
+        $filteredConfigs = $configs->filter(function ($config) use ($configWirdIds) {
+            return $configWirdIds->contains($config->id);
+        });
+
+        if ($filteredConfigs->isEmpty() && empty($validated['wirds'])) {
             return $this->errorResponse('لا يوجد إعداد أوراد لليوم.');
         }
 
         DB::beginTransaction();
         try {
-            foreach ($configs as $config) {
+
+            // $configWirds = $validated['config_wirds'];
+            // add  ids
+
+            foreach ($filteredConfigs as $config) {
                 // Check if the group has a Wird for today
                 $existingWird = Wird::where('group_id', $config->group_id)
                     ->where('group_wird_config_id', $config->id)
