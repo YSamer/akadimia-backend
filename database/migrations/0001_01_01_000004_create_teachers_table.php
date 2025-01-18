@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->string('device_token')->nullable();
             $table->enum('gender', ['male', 'female']);
             $table->date('birth_date');
-            $table->enum('role', ['teacher'])->default('teacher');
+            $table->enum('role', ['halaqah', 'sard', 'halaqah_sard'])->default('halaqah');
             $table->boolean('is_active')->default(true);
             $table->rememberToken();
             $table->timestamps();

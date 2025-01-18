@@ -86,6 +86,10 @@ Route::prefix('admin')->group(function () {
         Route::post('create-teacher', [AdminAuthController::class, 'createTeacher']);
         Route::post('create-student', [AdminAuthController::class, 'createStudent']);
 
+        Route::post('change-teacher-role', [AdminAuthController::class, 'changeTeacherRole']);
+        Route::post('change-user-role', [AdminAuthController::class, 'changeUserRole']);
+
+
         // Global 
         Route::get('all-users', [AppController::class, 'allUsers']);
         Route::get('all-admins', [AppController::class, 'allAdmins']);

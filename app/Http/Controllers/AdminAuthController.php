@@ -345,6 +345,7 @@ class AdminAuthController extends Controller
             'gender' => 'required|in:male,female',
             'birth_date' => 'required|date',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'role' => 'required|string|max:10|in:halaqah,sard,halaqah_sard',
         ]);
 
         DB::beginTransaction();
@@ -393,6 +394,7 @@ class AdminAuthController extends Controller
             'gender' => 'required|in:male,female',
             'birth_date' => 'required|date',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'role' => 'required|string|max:10|in:lader,student',
         ]);
 
         DB::beginTransaction();
@@ -432,6 +434,39 @@ class AdminAuthController extends Controller
         }
     }
 
+    public function changeTeacherRole(Request $request)
+    {
+        $request->validate([
+            'teacher_id' => 'required|exists:teachers,id',
+            'role' => 'required|string|max:10|in:halaqah,sard,halaqah_sard',
+        ]);
+
+        $teacher = Teacher::find($request->teacher_id);
+        if (!$teacher) {
+            return $this->errorResponse('المعلم غير موجود.', 404);
+        }
+        $teacher->role = $request->role;
+        $teacher->save();
+
+        return $this->successResponse($teacher, 'تم تغيير نوع الحساب بنجاح.');
+    }
+
+    public function changeUserRole(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'role' => 'required|string|max:10|in:lader,student',
+        ]);
+
+        $user = User::find($request->user_id);
+        if (!$user) {
+            return $this->errorResponse('المستخدم غير موجود.', 404);
+        }
+        $user->role = $request->role;
+        $user->save();
+
+        return $this->successResponse($user, 'تم تغيير نوع الحساب بنجاح.');
+    }
 
     public function notify(Admin $admin)
     {
