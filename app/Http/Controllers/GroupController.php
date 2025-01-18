@@ -72,7 +72,7 @@ class GroupController extends Controller
             'name' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'batch_id' => 'required|exists:batches,id',
-            'rate_type' => 'required|in:excellent,very_good,good,acceptable',
+            'rate_type' => 'required|in:excellent,very_good,good,acceptable,none',
         ]);
 
         $data = $request->only(['name', 'batch_id']);

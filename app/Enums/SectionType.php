@@ -11,6 +11,7 @@ enum SectionType: string
     case PAGE = 'page';
     case AYAH = 'ayah';
     case POETRY_LINE = 'poetry_line';
+    case NONE = 'none';
 
     /**
      * Get the Arabic name for each type.
@@ -25,6 +26,7 @@ enum SectionType: string
             self::PAGE => 'وجه',
             self::AYAH => 'آية',
             self::POETRY_LINE => 'بيت',
+            self::NONE => '',
         };
     }
     public function type(): string
@@ -37,6 +39,7 @@ enum SectionType: string
             self::PAGE => 'Male',
             self::AYAH => 'Female',
             self::POETRY_LINE => 'Male',
+            self::NONE => 'Male',
         };
     }
 }

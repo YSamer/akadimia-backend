@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('batch_id');
             $table->string('name');
             $table->string('image')->nullable();
-            $table->enum('rate_type', ['excellent', 'very_good', 'good', 'acceptable']);
+            $table->enum('rate_type', ['excellent', 'very_good', 'good', 'acceptable', 'none']);
             $table->timestamps();
 
             $table->foreign('batch_id')->references('id')->on('batches')->onDelete('cascade');
