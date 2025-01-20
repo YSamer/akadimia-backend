@@ -242,7 +242,7 @@ class UserAuthController extends Controller
             'old_password' => 'sometimes|string|min:8',
             'password' => 'sometimes|string|min:8|confirmed',
             'phone' => 'sometimes|string|max:15|unique:users,phone',
-            // 'gender' => 'sometimes|in:male,female',
+            'telegram' => 'sometimes|string|max:255|unique:admins,telegram',
             'birth_date' => 'sometimes|date',
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -251,12 +251,10 @@ class UserAuthController extends Controller
 
         if ($request->has('name'))
             $user->name = $request->name;
-        // if ($request->has('email'))
-        //     $user->email = $request->email;
         if ($request->has('phone'))
             $user->phone = $request->phone;
-        // if ($request->has('gender'))
-        //     $user->gender = $request->gender;
+        if ($request->has('telegram'))
+            $user->telegram = $request->telegram;
         if ($request->has('birth_date'))
             $user->birth_date = $request->birth_date;
         if ($request->has('old_password') && Hash::check($request->old_password, $user->password)) {
@@ -277,14 +275,14 @@ class UserAuthController extends Controller
 
         $user->save();
 
-        return $this->successResponse($user, 'Profile updated successfully');
+        return $this->successResponse($user, 'تم تحديث البيانات بنجاح');
     }
 
     public function notify(User $user)
     {
         return response()->json($this->sendNotification(
             $user->device_token,
-            'Profile updated successfully',
+            'تم تحديث البيانات بنجاح',
             'edit',
             ['type' => 'test'],
         ));

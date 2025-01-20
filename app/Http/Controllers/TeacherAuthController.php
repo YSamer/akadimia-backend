@@ -251,7 +251,7 @@ class TeacherAuthController extends Controller
             'old_password' => 'sometimes|string|min:8',
             'password' => 'sometimes|string|min:8|confirmed',
             'phone' => 'sometimes|string|max:15|unique:teachers,phone',
-            // 'gender' => 'sometimes|in:male,female',
+            'telegram' => 'sometimes|string|max:255|unique:admins,telegram',
             'birth_date' => 'sometimes|date',
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
@@ -261,12 +261,10 @@ class TeacherAuthController extends Controller
 
         if ($request->has('name'))
             $teacher->name = $request->name;
-        // if ($request->has('email'))
-        //     $teacher->email = $request->email;
         if ($request->has('phone'))
             $teacher->phone = $request->phone;
-        // if ($request->has('gender'))
-        //     $teacher->gender = $request->gender;
+        if ($request->has('telegram'))
+            $teacher->telegram = $request->telegram;
         if ($request->has('birth_date'))
             $teacher->birth_date = $request->birth_date;
         if ($request->has('old_password') && Hash::check($request->old_password, $teacher->password)) {
@@ -289,7 +287,7 @@ class TeacherAuthController extends Controller
 
         $teacher->save();
 
-        return $this->successResponse($teacher, 'Profile updated successfully');
+        return $this->successResponse($teacher, 'تم تحديث البيانات بنجاح');
     }
 
 
@@ -297,7 +295,7 @@ class TeacherAuthController extends Controller
     {
         return response()->json($this->sendNotification(
             $teacher->device_token,
-            'Profile updated successfully',
+            'تم تحديث البيانات بنجاح',
             'edit',
             ['type' => 'test']
         ));

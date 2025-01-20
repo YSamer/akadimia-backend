@@ -254,7 +254,7 @@ class AdminAuthController extends Controller
             'old_password' => 'sometimes|string|min:8',
             'password' => 'sometimes|string|min:8|confirmed',
             'phone' => 'sometimes|string|max:15|unique:admins,phone',
-            // 'gender' => 'sometimes|in:male,female',
+            'telegram' => 'sometimes|string|max:255|unique:admins,telegram',
             'birth_date' => 'sometimes|date',
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -263,12 +263,10 @@ class AdminAuthController extends Controller
 
         if ($request->has('name'))
             $admin->name = $request->name;
-        // if ($request->has('email'))
-        //     $admin->email = $request->email;
         if ($request->has('phone'))
             $admin->phone = $request->phone;
-        // if ($request->has('gender'))
-        //     $admin->gender = $request->gender;
+        if ($request->has('telegram'))
+            $admin->telegram = $request->telegram;
         if ($request->has('birth_date'))
             $admin->birth_date = $request->birth_date;
         if ($request->has('old_password') && Hash::check($request->old_password, $admin->password)) {
@@ -288,7 +286,7 @@ class AdminAuthController extends Controller
         }
         $admin->save();
 
-        return $this->successResponse($admin, 'Profile updated successfully');
+        return $this->successResponse($admin, 'تم تحديث البيانات بنجاح');
     }
 
     public function createAdmin(Request $request)
@@ -476,7 +474,7 @@ class AdminAuthController extends Controller
     {
         return response()->json($this->sendNotification(
             $admin->device_token,
-            'Profile updated successfully',
+            'تم تحديث البيانات بنجاح',
             'edit',
             ['type' => 'test']
         ));
