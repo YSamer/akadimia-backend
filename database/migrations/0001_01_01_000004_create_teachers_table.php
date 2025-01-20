@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->string('password');
             $table->string('image')->nullable();
             $table->string('device_token')->nullable();
+            $table->string('telegram')->nullable();
             $table->enum('gender', ['male', 'female']);
             $table->date('birth_date');
             $table->enum('role', ['halaqah', 'sard', 'halaqah_sard'])->default('halaqah');

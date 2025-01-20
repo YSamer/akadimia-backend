@@ -112,7 +112,11 @@ class AdminAuthController extends Controller
 
         // Check if the admin's email is verified
         if (!$admin->hasVerifiedEmail()) {
-            return $this->errorResponse('برجاء تفعيل الحساب.', 2, 403);
+            cache()->forget("admin_otp_{$admin->id}");
+            $otp = rand(100000, 999999);
+            cache()->put("admin_otp_{$admin->id}", $otp, 300);
+            Mail::to($admin->email)->send(new OtpMail($otp, $admin));
+            return $this->successResponse(['admin' => $admin], 'برجاء تفعيل الحساب.');
         }
 
         // Update the device token

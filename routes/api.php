@@ -69,7 +69,7 @@ Route::prefix('user')->group(function () {
     });
 });
 Route::prefix('admin')->group(function () {
-    Route::post('register', [AdminAuthController::class, 'register']);
+    // Route::post('register', [AdminAuthController::class, 'register']);
     Route::post('login', [AdminAuthController::class, 'login']);
     Route::post('re-send-otp', [AdminAuthController::class, 'reSendOtp']);
     Route::post('forgot-password', [AdminAuthController::class, 'forgotPassword']);
@@ -153,7 +153,7 @@ Route::prefix('admin')->group(function () {
 });
 
 Route::prefix('teacher')->group(function () {
-    Route::post('register', [TeacherAuthController::class, 'register']);
+    // Route::post('register', [TeacherAuthController::class, 'register']);
     Route::post('login', [TeacherAuthController::class, 'login']);
     Route::post('re-send-otp', [TeacherAuthController::class, 'reSendOtp']);
     Route::post('forgot-password', [TeacherAuthController::class, 'forgotPassword']);
@@ -214,5 +214,9 @@ Route::prefix('teacher')->group(function () {
         Route::post('/read-notification/{id}', [NotificationController::class, 'readNotification']);
         Route::post('/delete-notification/{id}', [NotificationController::class, 'deleteNotification']);
 
+        // Global
+        Route::get('all-groups', [GroupController::class, 'indexAll']);
+        Route::get('all-users', [AppController::class, 'allUsers']);
+        Route::get('all-group-users/{id}', [AppController::class, 'allGroupUsers']);
     });
 });

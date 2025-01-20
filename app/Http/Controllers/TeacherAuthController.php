@@ -110,7 +110,11 @@ class TeacherAuthController extends Controller
 
         // Check if the teacher's email is verified
         if (!$teacher->hasVerifiedEmail()) {
-            return $this->errorResponse('برجاء تفعيل الحساب.', 2, 403);
+            cache()->forget("teacher_otp_{$teacher->id}");
+            $otp = rand(100000, 999999);
+            cache()->put("teacher_otp_{$teacher->id}", $otp, 300);
+            Mail::to($teacher->email)->send(new OtpMail($otp, $teacher));
+            return $this->successResponse(['teacher' => $teacher], 'برجاء تفعيل الحساب.');
         }
 
         $teacher->device_token = $request->device_token;

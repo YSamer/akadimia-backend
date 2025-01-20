@@ -136,7 +136,7 @@ class UserAuthController extends Controller
             $otp = rand(100000, 999999);
             cache()->put("otp_{$user->id}", $otp, 300);
             Mail::to($user->email)->send(new OtpMail($otp, $user));
-            return $this->successResponse(['user' => $user], 'تم تسجيل الدخول بنجاح');
+            return $this->successResponse(['user' => $user], 'برجاء تفعيل الحساب.');
         }
 
         $user->device_token = $request->device_token;
@@ -215,7 +215,7 @@ class UserAuthController extends Controller
             return $this->errorResponse('برجاء تفعيل الحساب.', null, 403);
         }
 
-        return $this->successResponse(['user' => $user], 'Auto تم تسجيل الدخول بنجاح');
+        return $this->successResponse(['user' => $user], 'تم تسجيل الدخول بنجاح');
     }
 
     public function logout(Request $request)

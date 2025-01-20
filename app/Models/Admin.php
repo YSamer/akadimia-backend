@@ -25,6 +25,7 @@ class Admin extends Authenticatable implements MustVerifyEmail
         'password',
         'image',
         'gender',
+        'telegram',
         'role',
         'birth_date',
         'is_active',
