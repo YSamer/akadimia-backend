@@ -347,7 +347,7 @@ class AdminAuthController extends Controller
             'gender' => 'required|in:male,female',
             'birth_date' => 'required|date',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'role' => 'required|string|max:10|in:halaqah,sard,halaqah_sard',
+            'role' => 'required|string|in:halaqah,sard,halaqah_sard',
         ]);
 
         DB::beginTransaction();
@@ -368,6 +368,7 @@ class AdminAuthController extends Controller
                 'birth_date' => $request->birth_date,
                 'image' => $request->image,
                 'email_verified_at' => now(),
+                'role' => $request->role,
             ]);
 
             // $otp = rand(100000, 999999);
@@ -396,7 +397,7 @@ class AdminAuthController extends Controller
             'gender' => 'required|in:male,female',
             'birth_date' => 'required|date',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'role' => 'required|string|max:10|in:lader,student',
+            'role' => 'required|string|in:lader,student',
         ]);
 
         DB::beginTransaction();
@@ -417,6 +418,7 @@ class AdminAuthController extends Controller
                 'birth_date' => $request->birth_date,
                 'image' => $request->image,
                 'email_verified_at' => now(),
+                'role' => $request->role,
             ]);
 
             // $otp = rand(100000, 999999);
