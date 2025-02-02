@@ -71,6 +71,11 @@ class User extends Authenticatable implements MustVerifyEmail
             ->withTimestamps();
     }
 
+    public function userWirdsDones()
+    {
+        return $this->hasMany(UserWirdsDone::class);
+    }
+
     /**
      * Get all wird completions associated with the user.
      *

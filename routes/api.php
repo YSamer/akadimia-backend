@@ -8,7 +8,9 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\BatchApplyController;
 use App\Http\Controllers\ExamController;
+use App\Http\Controllers\GroupConfigController;
 use App\Http\Controllers\GroupWirdConfigController;
+use App\Http\Controllers\GroupWirdController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TeacherAuthController;
@@ -130,6 +132,14 @@ Route::prefix('admin')->group(function () {
         Route::get('wirds', [WirdController::class, 'index']);
         Route::get('today-wirds', [WirdController::class, 'todayWirds']);
         Route::get('today-wirds/{id}', [WirdController::class, 'groupTodayWirds']);
+
+        // New wirds
+        // Group wirds
+        Route::get('group-wirds', [GroupWirdController::class, 'index']);
+        Route::get('group-wirds/{id}', [GroupWirdController::class, 'groupWirds']);
+        // Group config
+        Route::get('group-config/{groupId}', [GroupConfigController::class, 'show']);
+        Route::post('update-group-config/{groupId}', [GroupConfigController::class, 'update']);
 
         // Exams
         Route::get('/get-exams', [ExamController::class, 'getExams']);
