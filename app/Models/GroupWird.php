@@ -21,6 +21,14 @@ class GroupWird extends Model
         'tajweed_dars',
         'tafseer_dars',
     ];
+    protected $appends = [
+        'weekly_tahder_to',
+    ];
+
+    public function getWeeklyTahderToAttribute()
+    {
+        return min($this->weekly_tahder_from === 1 ? 6 : $this->weekly_tahder_from + 5, 604);
+    }
 
     public function group()
     {

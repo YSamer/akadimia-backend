@@ -14,14 +14,15 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('group_id')->constrained('groups')->cascadeOnDelete();
             $table->date('date');
-            $table->unsignedSmallInteger('hifz_page')->nullable()->default(1);
-            $table->unsignedTinyInteger('tilawah_juz')->nullable()->default(1);
-            $table->unsignedTinyInteger('sama_hizb')->nullable()->default(1);
-            $table->unsignedSmallInteger('weekly_tahder_from')->nullable()->default(1);
+            $table->unsignedSmallInteger('hifz_page')->nullable()->default(null);
+            $table->unsignedTinyInteger('tilawah_juz')->nullable()->default(null);
+            $table->unsignedTinyInteger('sama_hizb')->nullable()->default(null);
+            $table->unsignedSmallInteger('weekly_tahder_from')->nullable()->default(null);
             $table->unsignedSmallInteger('tajweed_dars')->nullable()->default(null);
             $table->unsignedSmallInteger('tafseer_dars')->nullable()->default(null);
 
             $table->timestamps();
+            $table->unique(['group_id', 'date']);
         });
     }
 

@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\SectionType;
-use App\Enums\WeekDays;
-use App\Enums\WirdType;
+use App\Http\Requests\UpdateGroupConfigRequest;
 use App\Http\Resources\GroupConfigResource;
-use App\Http\Resources\GroupWirdConfigResource;
 use App\Models\Group;
 use App\Models\GroupConfig;
 use App\Models\GroupWirdConfig;
@@ -33,17 +30,9 @@ class GroupConfigController extends Controller
         return $this->successResponse(new GroupConfigResource($groupConfig));
     }
 
-    public function update(Request $request, $groupId)
+    public function update(UpdateGroupConfigRequest $request, $groupId)
     {
-        $fillableAttributes = (new GroupConfig())->getFillable();
-        $rules = [];
-        foreach ($fillableAttributes as $attribute) {
-            if ($attribute !== 'group_id' && $attribute !== 'id') {
-                $rules[$attribute] = 'nullable|integer|between:1,20';
-            }
-        }
-
-        $validated = $request->validate($rules);
+        $validated = $request->validated();
 
         $group = Group::find($groupId);
         if (!$group) {

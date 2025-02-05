@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('group_id')->constrained('groups')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-
+            $table->date('date');
             $table->boolean('tilawah_juz_done')->default(false);
             $table->boolean('sama_hizb_done')->default(false);
             $table->boolean('weekly_tahder_done')->default(2);

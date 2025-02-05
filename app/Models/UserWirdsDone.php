@@ -14,6 +14,7 @@ class UserWirdsDone extends Model
     protected $fillable = [
         'group_id',
         'user_id',
+        'date',
         'tilawah_juz_done',
         'sama_hizb_done',
         'weekly_tahder_done',
@@ -30,6 +31,10 @@ class UserWirdsDone extends Model
         'tafseer_dars_done',
         'tajweed_dars_done',
         'fwaed_text',
+    ];
+
+    protected $casts = [
+        'date' => 'date',
     ];
 
     public function group()

@@ -10,7 +10,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('group_configs', function (Blueprint $table) {
+        $daysTypes = ["hifz", "tafseer", "tajweed", "morajaa", "ajaza"];
+        Schema::create('group_configs', function (Blueprint $table) use ($daysTypes) {
             $table->id();
             $table->foreignId('group_id')->unique()->constrained('groups')->cascadeOnDelete();
 
@@ -47,9 +48,15 @@ return new class extends Migration {
             $table->unsignedTinyInteger('tafseer_dars_sanction')->default(5);
             $table->unsignedTinyInteger('tajweed_dars_grade')->default(5);
             $table->unsignedTinyInteger('tajweed_dars_sanction')->default(5);
-            $table->unsignedTinyInteger('fwaed_grade')->default(5);
+            $table->unsignedTinyInteger('fwaed_grade')->default(5); 
             $table->unsignedTinyInteger('fwaed_sanction')->default(5);
-
+            $table->enum('saturday', $daysTypes)->default("hifz");
+            $table->enum('sunday', $daysTypes)->default("hifz");
+            $table->enum('monday', $daysTypes)->default("hifz");
+            $table->enum('tuesday', $daysTypes)->default("hifz");
+            $table->enum('wednesday', $daysTypes)->default("hifz");
+            $table->enum('thursday', $daysTypes)->default("tafseer");
+            $table->enum('friday', $daysTypes)->default("tajweed");
             $table->timestamps();
         });
     }

@@ -45,6 +45,13 @@ class GroupConfig extends Model
         'tajweed_dars_sanction',
         'fwaed_grade',
         'fwaed_sanction',
+        'saturday',
+        'sunday',
+        'monday',
+        'tuesday',
+        'wednesday',
+        'thursday',
+        'friday',
     ];
 
     protected $casts = [
