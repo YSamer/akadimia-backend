@@ -48,7 +48,7 @@ return new class extends Migration {
             $table->unsignedTinyInteger('tafseer_dars_sanction')->default(5);
             $table->unsignedTinyInteger('tajweed_dars_grade')->default(5);
             $table->unsignedTinyInteger('tajweed_dars_sanction')->default(5);
-            $table->unsignedTinyInteger('fwaed_grade')->default(5); 
+            $table->unsignedTinyInteger('fwaed_grade')->default(5);
             $table->unsignedTinyInteger('fwaed_sanction')->default(5);
             $table->enum('saturday', $daysTypes)->default("hifz");
             $table->enum('sunday', $daysTypes)->default("hifz");
@@ -57,6 +57,10 @@ return new class extends Migration {
             $table->enum('wednesday', $daysTypes)->default("hifz");
             $table->enum('thursday', $daysTypes)->default("tafseer");
             $table->enum('friday', $daysTypes)->default("tajweed");
+            $table->unsignedSmallInteger('sard_shikh')->nullable()->default(null);
+            $table->unsignedSmallInteger('sard_rafiq')->nullable()->default(null);
+            $table->unsignedSmallInteger('tohfa')->nullable()->default(null);
+            $table->unsignedSmallInteger('hifz_start_from')->default(1);
             $table->timestamps();
         });
     }

@@ -52,6 +52,10 @@ class GroupConfig extends Model
         'wednesday',
         'thursday',
         'friday',
+        'sard_shikh',
+        'sard_rafiq',
+        'tohfa',
+        'hifz_start_from',
     ];
 
     protected $casts = [
@@ -87,6 +91,10 @@ class GroupConfig extends Model
         'tajweed_dars_sanction' => 'integer',
         'fwaed_grade' => 'integer',
         'fwaed_sanction' => 'integer',
+        'sard_shikh' => 'integer',
+        'sard_rafiq' => 'integer',
+        'tohfa' => 'integer',
+        'hifz_start_from' => 'integer',
     ];
 
     public function group()

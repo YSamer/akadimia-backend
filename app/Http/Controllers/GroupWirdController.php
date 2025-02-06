@@ -64,6 +64,9 @@ class GroupWirdController extends Controller
             'tajweed_dars' => $request->tajweed_dars,
             'tafseer_dars' => $request->tafseer_dars,
             'weekly_tahder_from' => $request->weekly_tahder_from ?? 1,
+            'sard_shikh_from' => $request->sard_shikh_from ?? 0,
+            'sard_rafiq_from' => $request->sard_rafiq_from ?? 0,
+            'hifz_tohfa_from' => $request->hifz_tohfa_from ?? 0,
         ];
 
         if ($lastGroupWird) {

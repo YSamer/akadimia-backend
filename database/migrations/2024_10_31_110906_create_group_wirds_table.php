@@ -20,6 +20,9 @@ return new class extends Migration {
             $table->unsignedSmallInteger('weekly_tahder_from')->nullable()->default(null);
             $table->unsignedSmallInteger('tajweed_dars')->nullable()->default(null);
             $table->unsignedSmallInteger('tafseer_dars')->nullable()->default(null);
+            $table->unsignedSmallInteger('sard_shikh_from')->nullable()->default(null);
+            $table->unsignedSmallInteger('sard_rafiq_from')->nullable()->default(null);
+            $table->unsignedSmallInteger('hifz_tohfa_from')->nullable()->default(null);
 
             $table->timestamps();
             $table->unique(['group_id', 'date']);

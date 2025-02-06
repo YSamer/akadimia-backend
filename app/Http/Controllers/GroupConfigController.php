@@ -33,6 +33,12 @@ class GroupConfigController extends Controller
     public function update(UpdateGroupConfigRequest $request, $groupId)
     {
         $validated = $request->validated();
+        if (isset($validated['sard_shikh']))
+            $validated['sard_shikh'] = $validated['sard_shikh'] > 0 ? $validated['sard_shikh'] : null;
+        if (isset($validated['sard_rafiq']))
+            $validated['sard_rafiq'] = $validated['sard_rafiq'] > 0 ? $validated['sard_rafiq'] : null;
+        if (isset($validated['tohfa']))
+            $validated['tohfa'] = $validated['tohfa'] > 0 ? $validated['tohfa'] : null;
 
         $group = Group::find($groupId);
         if (!$group) {

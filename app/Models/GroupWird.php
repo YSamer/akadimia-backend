@@ -20,9 +20,15 @@ class GroupWird extends Model
         'weekly_tahder_from',
         'tajweed_dars',
         'tafseer_dars',
+        'sard_shikh_from',
+        'sard_rafiq_from',
+        'hifz_tohfa_from',
     ];
     protected $appends = [
         'weekly_tahder_to',
+        'sard_shikh_to',
+        'sard_rafiq_to',
+        'hifz_tohfa_to',
     ];
 
     public function getWeeklyTahderToAttribute()
