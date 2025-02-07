@@ -64,8 +64,8 @@ class GroupWirdController extends Controller
             'tajweed_dars' => $request->tajweed_dars,
             'tafseer_dars' => $request->tafseer_dars,
             'weekly_tahder_from' => $request->weekly_tahder_from ?? 1,
-            'sard_shikh_from' => $request->sard_shikh_from ?? null,
-            'sard_rafiq_from' => $request->sard_rafiq_from ?? null,
+            'sard_shikh' => $request->sard_shikh ?? null,
+            'sard_rafiq' => $request->sard_rafiq ?? null,
             'hifz_tohfa_from' => $request->hifz_tohfa_from ?? null,
         ];
 
@@ -80,7 +80,7 @@ class GroupWirdController extends Controller
                     ->whereNotNull($this->groupWirdService->getColumnForAction($action))
                     ->latest('date')->first();
 
-                $newData = $this->groupWirdService->generateNewData($action, $lastGroupWird, $lastNonNullData, $todayName, $newData, $groupConfig);
+                $newData = $this->groupWirdService->generateNewData($request, $action, $lastGroupWird, $lastNonNullData, $todayName, $newData, $groupConfig);
             }
         }
 

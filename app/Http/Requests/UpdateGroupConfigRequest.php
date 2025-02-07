@@ -62,8 +62,8 @@ class UpdateGroupConfigRequest extends FormRequest
             'wednesday' => 'nullable|string|in:hifz,tafseer,tajweed,morajaa,ajaza',
             'thursday' => 'nullable|string|in:hifz,tafseer,tajweed,morajaa,ajaza',
             'friday' => 'nullable|string|in:hifz,tafseer,tajweed,morajaa,ajaza',
-            'sard_shikh' => 'nullable|integer|between:0,604',
-            'sard_rafiq' => 'nullable|integer|between:0,604',
+            'sard_shikh' => 'nullable|string|in:none,last_ten_pages,last_juz,sequent_hifz,custom',
+            'sard_rafiq' => 'nullable|string|in:none,last_ten_pages,last_juz,sequent_hifz,custom',
             'tohfa' => 'nullable|integer|between:0,61',
             'hifz_start_from' => 'nullable|integer|between:1,604',
         ];

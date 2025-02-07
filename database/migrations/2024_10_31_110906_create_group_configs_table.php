@@ -11,7 +11,8 @@ return new class extends Migration {
     public function up(): void
     {
         $daysTypes = ["hifz", "tafseer", "tajweed", "morajaa", "ajaza"];
-        Schema::create('group_configs', function (Blueprint $table) use ($daysTypes) {
+        $sardTypes = ["none", "last_ten_pages", "last_juz", "sequent_hifz", "custom"];
+        Schema::create('group_configs', function (Blueprint $table) use ($daysTypes, $sardTypes) {
             $table->id();
             $table->foreignId('group_id')->unique()->constrained('groups')->cascadeOnDelete();
 
@@ -57,8 +58,8 @@ return new class extends Migration {
             $table->enum('wednesday', $daysTypes)->default("hifz");
             $table->enum('thursday', $daysTypes)->default("tafseer");
             $table->enum('friday', $daysTypes)->default("tajweed");
-            $table->unsignedSmallInteger('sard_shikh')->nullable()->default(null);
-            $table->unsignedSmallInteger('sard_rafiq')->nullable()->default(null);
+            $table->enum('sard_shikh', $sardTypes)->default("none");
+            $table->enum('sard_rafiq', $sardTypes)->default("none");
             $table->unsignedSmallInteger('tohfa')->nullable()->default(null);
             $table->unsignedSmallInteger('hifz_start_from')->default(1);
             $table->timestamps();

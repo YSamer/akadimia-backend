@@ -29,7 +29,7 @@ class GroupWirdService
         return $newData;
     }
 
-    public function generateNewData($action, $lastGroupWird, $lastNonNullData, $todayName, $newData, $groupConfig)
+    public function generateNewData($request, $action, $lastGroupWird, $lastNonNullData, $todayName, $newData, $groupConfig)
     {
         $newData['tilawah_juz'] = $lastGroupWird->tilawah_juz + 1;
         $newData['sama_hizb'] = $lastGroupWird->sama_hizb + 1;
@@ -39,8 +39,8 @@ class GroupWirdService
         switch ($action) {
             case 'hifz':
                 $newData['hifz_page'] = $lastNonNullData ? $lastNonNullData->hifz_page + 1 : 1;
-                $newData['sard_shikh_from'] = $this->getSardShikhFrom($groupConfig);
-                $newData['sard_rafiq_from'] = $this->getSardRafiqFrom($groupConfig);
+                $newData['sard_shikh'] = $this->getSardShikh($request, $groupConfig);
+                $newData['sard_rafiq'] = $this->getSardRafiq($request, $groupConfig);
                 // $newData['hifz_tohfa_from'];
                 break;
             case 'tafseer':
@@ -56,32 +56,94 @@ class GroupWirdService
         return $newData;
     }
 
-    public function getSardShikhFrom($groupConfig)
+    public function getSardShikh($request, $groupConfig)
     {
-        // IF 'hifz' action
+        $sardShikh = null;
         $lastNonNullData = GroupWird::where('group_id', $groupConfig->group_id)
             ->whereNotNull('hifz_page')
             ->latest('date')->first();
         $startHifz = $groupConfig->hifz_start_from;
         $endHifz = $lastNonNullData->hifz_page;
+        if ($groupConfig->sard_shikh === 'last_ten_pages') {
+            $from = $endHifz - 9;
+            if ($from <= 0)
+                $from = 1;
+            $sardShikh = [
+                'type' => 'last_ten_pages',
+                'from' => $from,
+                'to' => $endHifz,
+            ];
+        } else if ($groupConfig->sard_shikh === 'last_juz') {
+            $from = $endHifz - 19;
+            if ($from <= 0)
+                $from = 1;
+            $sardShikh = [
+                'type' => 'last_juz',
+                'from' => $from,
+                'to' => $endHifz,
+            ];
+        } else if ($groupConfig->sard_shikh === 'custom') {
+            $sardShikh = [
+                'type' => 'custom',
+                'from' => (int) $request->sard_shikh_from ?? $endHifz - 9,
+                'to' => (int) $request->sard_shikh_to ?? $endHifz,
+            ];
+        } else if ($groupConfig->sard_shikh === 'sequent_hifz') {
+            $lastSard = $lastNonNullData->sard_shikh;
+            $nextHizb = getHizbByPageInRange(isset($lastSard['to']) ? $lastSard['to'] + 1 : $startHifz, $startHifz, $endHifz);
+            $sardShikh = [
+                'type' => 'sequent_hifz',
+                'from' => $nextHizb['start_page'],
+                'to' => min($endHifz, $nextHizb['end_page']),
+            ];
+        }
 
-        $fromToWird = getNextArrayFromContainingValue($startHifz, $endHifz, $groupConfig->sard_shikh, $lastNonNullData->sard_shikh_from);
-
-        return $fromToWird;
+        return $sardShikh;
     }
 
-    public function getSardRafiqFrom($groupConfig)
+    public function getSardRafiq($request, $groupConfig)
     {
-        // IF 'hifz' action
+        $sardRafiq = null;
         $lastNonNullData = GroupWird::where('group_id', $groupConfig->group_id)
             ->whereNotNull('hifz_page')
             ->latest('date')->first();
         $startHifz = $groupConfig->hifz_start_from;
         $endHifz = $lastNonNullData->hifz_page;
+        if ($groupConfig->sard_rafiq === 'last_ten_pages') {
+            $from = $endHifz - 9;
+            if ($from <= 0)
+                $from = 1;
+            $sardRafiq = [
+                'type' => 'last_ten_pages',
+                'from' => $from,
+                'to' => $endHifz,
+            ];
+        } else if ($groupConfig->sard_rafiq === 'last_juz') {
+            $from = $endHifz - 19;
+            if ($from <= 0)
+                $from = 1;
+            $sardRafiq = [
+                'type' => 'last_juz',
+                'from' => $from,
+                'to' => $endHifz,
+            ];
+        } else if ($groupConfig->sard_rafiq === 'custom') {
+            $sardRafiq = [
+                'type' => 'custom',
+                'from' => (int) $request->sard_rafiq_from ?? $endHifz - 9,
+                'to' => (int) $request->sard_rafiq_to ?? $endHifz,
+            ];
+        } else if ($groupConfig->sard_rafiq === 'sequent_hifz') {
+            $lastSard = $lastNonNullData->sard_rafiq;
+            $nextHizb = getHizbByPageInRange(isset($lastSard['to']) ? $lastSard['to'] + 1 : $startHifz, $startHifz, $endHifz);
+            $sardRafiq = [
+                'type' => 'sequent_hifz',
+                'from' => $nextHizb['start_page'],
+                'to' => min($endHifz, $nextHizb['end_page']),
+            ];
+        }
 
-        $fromToWird = getNextArrayFromContainingValue($startHifz, $endHifz, $groupConfig->sard_rafiq, $lastNonNullData->sard_rafiq_from);
-
-        return $fromToWird;
+        return $sardRafiq;
     }
 
     public function getWeeklyTahderFrom($todayName, $lastGroupWird)

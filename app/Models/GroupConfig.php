@@ -91,8 +91,6 @@ class GroupConfig extends Model
         'tajweed_dars_sanction' => 'integer',
         'fwaed_grade' => 'integer',
         'fwaed_sanction' => 'integer',
-        'sard_shikh' => 'integer',
-        'sard_rafiq' => 'integer',
         'tohfa' => 'integer',
         'hifz_start_from' => 'integer',
     ];

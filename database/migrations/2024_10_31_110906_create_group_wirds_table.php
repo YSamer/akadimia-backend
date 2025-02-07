@@ -14,15 +14,15 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('group_id')->constrained('groups')->cascadeOnDelete();
             $table->date('date');
-            $table->unsignedSmallInteger('hifz_page')->nullable()->default(null);
-            $table->unsignedTinyInteger('tilawah_juz')->nullable()->default(null);
-            $table->unsignedTinyInteger('sama_hizb')->nullable()->default(null);
-            $table->unsignedSmallInteger('weekly_tahder_from')->nullable()->default(null);
-            $table->unsignedSmallInteger('tajweed_dars')->nullable()->default(null);
-            $table->unsignedSmallInteger('tafseer_dars')->nullable()->default(null);
-            $table->unsignedSmallInteger('sard_shikh_from')->nullable()->default(null);
-            $table->unsignedSmallInteger('sard_rafiq_from')->nullable()->default(null);
-            $table->unsignedSmallInteger('hifz_tohfa_from')->nullable()->default(null);
+            $table->unsignedSmallInteger('hifz_page')->nullable();
+            $table->unsignedTinyInteger('tilawah_juz')->nullable();
+            $table->unsignedTinyInteger('sama_hizb')->nullable();
+            $table->unsignedSmallInteger('weekly_tahder_from')->nullable();
+            $table->unsignedSmallInteger('tajweed_dars')->nullable();
+            $table->unsignedSmallInteger('tafseer_dars')->nullable();
+            $table->json('sard_shikh')->nullable();
+            $table->json('sard_rafiq')->nullable();
+            $table->unsignedSmallInteger('hifz_tohfa_from')->nullable();
 
             $table->timestamps();
             $table->unique(['group_id', 'date']);
