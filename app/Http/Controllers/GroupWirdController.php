@@ -64,9 +64,9 @@ class GroupWirdController extends Controller
             'tajweed_dars' => $request->tajweed_dars,
             'tafseer_dars' => $request->tafseer_dars,
             'weekly_tahder_from' => $request->weekly_tahder_from ?? 1,
-            'sard_shikh_from' => $request->sard_shikh_from ?? 0,
-            'sard_rafiq_from' => $request->sard_rafiq_from ?? 0,
-            'hifz_tohfa_from' => $request->hifz_tohfa_from ?? 0,
+            'sard_shikh_from' => $request->sard_shikh_from ?? null,
+            'sard_rafiq_from' => $request->sard_rafiq_from ?? null,
+            'hifz_tohfa_from' => $request->hifz_tohfa_from ?? null,
         ];
 
         if ($lastGroupWird) {
@@ -80,7 +80,7 @@ class GroupWirdController extends Controller
                     ->whereNotNull($this->groupWirdService->getColumnForAction($action))
                     ->latest('date')->first();
 
-                $newData = $this->groupWirdService->generateNewData($action, $lastGroupWird, $lastNonNullData, $todayName, $newData);
+                $newData = $this->groupWirdService->generateNewData($action, $lastGroupWird, $lastNonNullData, $todayName, $newData, $groupConfig);
             }
         }
 
@@ -105,7 +105,7 @@ class GroupWirdController extends Controller
         if (!$groupWirdToday) {
             return $this->errorResponse('لا يوجد أوراد اليوم لهذه المجموعة', 404);
         }
-        return $this->errorResponse('تم تنزيل أوراد اليوم من قبل', $groupWirdToday, 404);
+        return $this->errorResponse('تم تنزيل أوراد اليوم من قبل', new GroupWirdResource($groupWirdToday), 404);
     }
 
     /**

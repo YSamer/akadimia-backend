@@ -16,9 +16,13 @@ class GroupWirdResource extends JsonResource
     public function toArray(Request $request): array
     {
         $groupConfig = GroupConfig::where('group_id', $this->group_id)->first();
-        $sardShikhTo = 5;
-        $sardRafiqTo = 5;
+        $sardShikhTo = $this->sard_shikh_from > 0 ? $this->sard_shikh_from + $groupConfig->sard_shikh - 1 : null;
+        $sardRafiqTo = $this->sard_rafiq_from > 0 ? $this->sard_rafiq_from + $groupConfig->sard_rafiq - 1 : null;
         $hifzTohfaTo = 5;
+        if ($this->sard_shikh_from == 1)
+            $sardShikhTo++;
+        if ($this->sard_rafiq_from == 1)
+            $sardRafiqTo++;
         return [
             'id' => $this->id,
             'group_id' => $this->group_id,

@@ -26,14 +26,14 @@ class GroupWird extends Model
     ];
     protected $appends = [
         'weekly_tahder_to',
-        'sard_shikh_to',
-        'sard_rafiq_to',
-        'hifz_tohfa_to',
+        // 'sard_shikh_to',
+        // 'sard_rafiq_to',
+        // 'hifz_tohfa_to',
     ];
 
     public function getWeeklyTahderToAttribute()
     {
-        return min($this->weekly_tahder_from === 1 ? 6 : $this->weekly_tahder_from + 5, 604);
+        return $this->weekly_tahder_from ? min($this->weekly_tahder_from === 1 ? 6 : $this->weekly_tahder_from + 5, 604) : null;
     }
 
     public function group()
