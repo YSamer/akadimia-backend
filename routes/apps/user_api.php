@@ -6,6 +6,8 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\BatchApplyController;
 use App\Http\Controllers\ExamController;
+use App\Http\Controllers\GroupConfigController;
+use App\Http\Controllers\GroupWirdController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 // use App\Http\Controllers\LastGroupWirdConfigController;
@@ -60,6 +62,22 @@ Route::prefix('user')->group(function () {
         Route::get('/get-notifications', [NotificationController::class, 'getNotifications']);
         Route::post('/read-notification/{id}', [NotificationController::class, 'readNotification']);
         Route::post('/delete-notification/{id}', [NotificationController::class, 'deleteNotification']);
+
+        ///
+        /// New wirds
+        ///
+        // Group config
+        Route::middleware('lader')->group(function () {
+            Route::get('group-config/{groupId}', [GroupConfigController::class, 'show']);
+            Route::post('update-group-config/{groupId}', [GroupConfigController::class, 'update']);
+            // Group Wirds
+            Route::post('add-today-wird/{test?}', [GroupWirdController::class, 'store'])
+                ->where('test', '^(test)?$');
+        });
+        Route::get('group-today-wird/{groupId}', [GroupWirdController::class, 'show']);
+
+        // User Wirds Done
+        Route::post('make-wird-done', [GroupWirdController::class, 'userDoneWird']);
 
     });
 });

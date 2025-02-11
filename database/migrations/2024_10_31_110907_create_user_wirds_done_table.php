@@ -17,19 +17,19 @@ return new class extends Migration {
             $table->date('date');
             $table->boolean('tilawah_juz_done')->default(false);
             $table->boolean('sama_hizb_done')->default(false);
-            $table->boolean('weekly_tahder_done')->default(2);
-            $table->boolean('hifz_night_tahder_done')->default(2);
-            $table->boolean('hifz_before_tahder_done')->default(2);
-            $table->boolean('hifz_tafser_done')->default(2);
-            $table->boolean('hifz_tadabor_done')->default(2);
+            $table->boolean('weekly_tahder_done')->default(false);
+            $table->boolean('hifz_night_tahder_done')->default(false);
+            $table->boolean('hifz_before_tahder_done')->default(false);
+            $table->boolean('hifz_tafser_done')->default(false);
+            $table->boolean('hifz_tadabor_done')->default(false);
             $table->text('hifz_waqfa_text')->nullable();
-            $table->boolean('hifz_dabt_tilawah_done')->default(2);
-            $table->boolean('salat_hifz_done')->default(2);
+            $table->boolean('hifz_dabt_tilawah_done')->default(false);
+            $table->boolean('salat_hifz_done')->default(false);
             $table->unsignedTinyInteger('halaqah_grade')->nullable();
             $table->unsignedTinyInteger('sard_shikh_grade')->nullable();
             $table->unsignedTinyInteger('sard_rafiq_grade')->nullable();
-            $table->boolean('tafseer_dars_done')->default(5);
-            $table->boolean('tajweed_dars_done')->default(5);
+            $table->boolean('tafseer_dars_done')->default(false);
+            $table->boolean('tajweed_dars_done')->default(false);
             $table->text('fwaed_text')->nullable();
 
             $table->timestamps();

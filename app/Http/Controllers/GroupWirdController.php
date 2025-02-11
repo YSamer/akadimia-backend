@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MakeUserDoneWirdsRequest;
 use App\Http\Resources\GroupWirdResource;
+use App\Http\Resources\UserWirdsDoneResource;
 use App\Models\GroupConfig;
 use App\Models\GroupWird;
+use App\Models\UserWirdsDone;
 use App\Services\GroupWirdService;
 use App\Traits\APIResponse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GroupWirdController extends Controller
 {
@@ -159,5 +163,28 @@ class GroupWirdController extends Controller
 
         // $groupWirdConfig->delete();
         // return $this->successResponse(null, 'تم حذف اعداد للمجموعة بنجاح');
+    }
+
+    ///
+    /// User Wirds Done
+    ///
+
+    public function userDoneWird(MakeUserDoneWirdsRequest $request)
+    {
+        $user = Auth::user();
+        $today = now()->format('Y-m-d');
+        $todayGroupWirdsDone = UserWirdsDone::where('group_id', $request->group_id)
+            ->where('date', $today)->first();
+        if (!$todayGroupWirdsDone) {
+            $todayGroupWirdsDone = UserWirdsDone::create([
+                'group_id' => $request->group_id,
+                'user_id' => $request->user_id ?? $user->id,
+                'date' => $today,
+            ]);
+        }
+        $updateData = $request->except(['group_id', 'user_id', 'date', 'halaqah_grade', 'sard_shikh_grade']);
+        $todayGroupWirdsDone->update($updateData);
+
+        return $this->successResponse(new UserWirdsDoneResource($todayGroupWirdsDone), 'تم إتمام الورد');
     }
 }

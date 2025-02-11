@@ -93,6 +93,9 @@ Route::prefix('admin')->group(function () {
         Route::post('add-today-wird/{test?}', [GroupWirdController::class, 'store'])
             ->where('test', '^(test)?$');
 
+        // User Wirds Done
+        // Route::post('make-wird-done', [GroupWirdController::class, 'userDoneWird']);
+
 
         // Exams
         Route::get('/get-exams', [ExamController::class, 'getExams']);
