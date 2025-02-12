@@ -115,6 +115,12 @@ class Group extends Model
         return $this->morphMany(Exam::class, 'forwardable');
     }
 
+    public function halaqah()
+    {
+        return $this->morphMany(Halaqah::class, 'target', 'halaqah_targets', 'target_id', 'id')
+            ->where('target_type', Group::class);
+    }
+
     // public function createDefaultWirds()
     // {
     //     $configWirds = [

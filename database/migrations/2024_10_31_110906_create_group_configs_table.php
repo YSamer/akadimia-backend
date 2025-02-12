@@ -62,6 +62,7 @@ return new class extends Migration {
             $table->enum('sard_rafiq', $sardTypes)->default("none");
             $table->unsignedSmallInteger('tohfa')->nullable()->default(null);
             $table->unsignedSmallInteger('hifz_start_from')->default(1);
+            $table->time('halaqah_time')->nullable();
             $table->timestamps();
         });
     }

@@ -5,6 +5,7 @@ use App\Http\Controllers\BatchController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\ExamController;
+use App\Http\Controllers\HalaqahController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TeacherAuthController;
@@ -80,5 +81,8 @@ Route::prefix('teacher')->group(function () {
         Route::get('all-groups', [GroupController::class, 'indexAll']);
         Route::get('all-users', [AppController::class, 'allUsers']);
         Route::get('all-group-users/{id}', [AppController::class, 'allGroupUsers']);
+
+        // Halaqah
+        Route::post('finish-halaqah', [HalaqahController::class, 'finishHalaqah']);
     });
 });

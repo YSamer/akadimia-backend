@@ -15,14 +15,8 @@ class GroupWirdResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        // $groupConfig = GroupConfig::where('group_id', $this->group_id)->first();
-        // $sardShikhTo = $this->sard_shikh_from > 0 ? $this->sard_shikh_from + $groupConfig->sard_shikh - 1 : null;
-        // $sardRafiqTo = $this->sard_rafiq_from > 0 ? $this->sard_rafiq_from + $groupConfig->sard_rafiq - 1 : null;
-        // $hifzTohfaTo = 5;
-        // if ($this->sard_shikh_from == 1)
-        //     $sardShikhTo++;
-        // if ($this->sard_rafiq_from == 1)
-        //     $sardRafiqTo++;
+        $groupConfig = GroupConfig::where('group_id', $this->group_id)->first();
+
         return [
             'id' => $this->id,
             'group_id' => $this->group_id,
@@ -37,9 +31,8 @@ class GroupWirdResource extends JsonResource
             'sard_shikh' => $this->sard_shikh,
             'sard_rafiq' => $this->sard_rafiq,
             'hifz_tohfa_from' => $this->hifz_tohfa_from,
-            // 'sard_shikh_to' => $sardShikhTo,
-            // 'sard_rafiq_to' => $sardRafiqTo,
-            // 'hifz_tohfa_to' => $hifzTohfaTo,
+            'sard_shikh_confing' => $groupConfig->sard_shikh,
+            'sard_rafiq_confing' => $groupConfig->sard_rafiq,
         ];
     }
 }

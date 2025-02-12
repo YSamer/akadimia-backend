@@ -56,6 +56,7 @@ class GroupConfig extends Model
         'sard_rafiq',
         'tohfa',
         'hifz_start_from',
+        'halaqah_time',
     ];
 
     protected $casts = [
@@ -93,6 +94,7 @@ class GroupConfig extends Model
         'fwaed_sanction' => 'integer',
         'tohfa' => 'integer',
         'hifz_start_from' => 'integer',
+        'halaqah_time' => 'time',
     ];
 
     public function group()

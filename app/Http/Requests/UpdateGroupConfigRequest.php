@@ -66,6 +66,7 @@ class UpdateGroupConfigRequest extends FormRequest
             'sard_rafiq' => 'nullable|string|in:none,last_ten_pages,last_juz,sequent_hifz,custom',
             'tohfa' => 'nullable|integer|between:0,61',
             'hifz_start_from' => 'nullable|integer|between:1,604',
+            'halaqah_time' => 'nullable|date_format:H:i',
         ];
     }
 }

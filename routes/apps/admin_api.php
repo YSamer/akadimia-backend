@@ -8,6 +8,7 @@ use App\Http\Controllers\AppController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\GroupConfigController;
 use App\Http\Controllers\GroupWirdController;
+use App\Http\Controllers\HalaqahController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 // use App\Http\Controllers\LastGroupWirdConfigController;
@@ -95,7 +96,6 @@ Route::prefix('admin')->group(function () {
 
         // User Wirds Done
         // Route::post('make-wird-done', [GroupWirdController::class, 'userDoneWird']);
-
 
         // Exams
         Route::get('/get-exams', [ExamController::class, 'getExams']);
