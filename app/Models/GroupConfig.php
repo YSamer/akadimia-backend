@@ -94,7 +94,6 @@ class GroupConfig extends Model
         'fwaed_sanction' => 'integer',
         'tohfa' => 'integer',
         'hifz_start_from' => 'integer',
-        'halaqah_time' => 'time',
     ];
 
     public function group()

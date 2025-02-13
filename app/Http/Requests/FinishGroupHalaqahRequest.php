@@ -21,13 +21,20 @@ class FinishGroupHalaqahRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'group_id' => 'required|exists:groups,id',
             'date' => 'nullable|date|date_format:Y-m-d',
             'duration_hours' => 'required|integer|min:1|max:24',
             'duration_minutes' => 'required|integer|min:0|max:59',
         ];
+
+        foreach ($this->request->all() as $key => $value) {
+            if (preg_match('/^user_(\d+)$/', $key, $matches)) {
+                $rules[$key] = 'required|integer|min:0|max:10';
+            }
+        }
+
+        return $rules;
     }
+
 }
-// duration_hours
-// duration_minutes

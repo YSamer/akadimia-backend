@@ -81,9 +81,13 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    // public function wirdDones()
+    // {
+    //     return $this->hasMany(WirdDone::class);
+    // }
     public function wirdDones()
     {
-        return $this->hasMany(WirdDone::class);
+        return $this->hasMany(UserWirdsDone::class);
     }
 
     /**
