@@ -30,7 +30,7 @@ class FinishGroupHalaqahRequest extends FormRequest
 
         foreach ($this->request->all() as $key => $value) {
             if (preg_match('/^user_(\d+)$/', $key, $matches)) {
-                $rules[$key] = 'required|integer|min:0|max:10';
+                $rules[$key] = 'required|numeric|min:0|max:10';
             }
         }
 

@@ -44,9 +44,9 @@ class UserWirdsDone extends Model
         'hifz_tadabor_done' => 'boolean',
         'hifz_dabt_tilawah_done' => 'boolean',
         'salat_hifz_done' => 'boolean',
-        'halaqah_grade' => 'integer',
-        'sard_shikh_grade' => 'integer',
-        'sard_rafiq_grade' => 'integer',
+        'halaqah_grade' => 'float',
+        'sard_shikh_grade' => 'float',
+        'sard_rafiq_grade' => 'float',
         'tafseer_dars_done' => 'boolean',
         'tajweed_dars_done' => 'boolean',
     ];
