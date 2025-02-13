@@ -39,7 +39,7 @@ Route::prefix('teacher')->group(function () {
         // Route::post('batches/delete/{id}', [BatchController::class, 'destroy']);
 
         // Groups
-        Route::get('groups', [GroupController::class, 'indexAdmin']);
+        Route::get('groups', [GroupController::class, 'index']);
         Route::get('all-groups', [GroupController::class, 'indexAll']);
         Route::get('groups/{id}', [GroupController::class, 'show']);
         // Route::post('groups/create', [GroupController::class, 'store']);

@@ -9,6 +9,7 @@ use App\Models\Group;
 use App\Models\GroupMember;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class GroupController extends Controller
@@ -17,7 +18,16 @@ class GroupController extends Controller
 
     public function index()
     {
-        $groups = Group::with('batch')->paginate(10);
+        $user = Auth::user();
+        if (auth('user')->check()) {
+            $groups = $user->groups()->with('batch')->paginate(10);
+        } else if (auth('teacher')->check()) {
+            $groups = $user->groups()->with('batch')->paginate(10);
+        } else if (auth('admin')->check()) {
+            $groups = Group::with('batch')->paginate(10);
+        } else {
+            return $this->errorResponse('Unauthenticated', null, 401);
+        }
         return $this->successResponse(GroupResource::collection($groups));
     }
 

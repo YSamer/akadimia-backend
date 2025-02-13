@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\FinishGroupHalaqahRequest;
 use App\Models\Group;
 use App\Models\Halaqah;
+use App\Models\Notification;
 use App\Models\Teacher;
+use App\Models\User;
 use App\Traits\APIResponse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -26,21 +28,25 @@ class HalaqahController extends Controller
         if (!$group) {
             return $this->errorResponse('المجموعة غير موجودة', null, 404);
         }
-        // TODO: if teacher in group members
 
-        $existHalaqah = Halaqah::where('type', 'halaqah')
-            ->where('teacher_id', $teacher->id)
-            ->where('target_type', Group::class)
-            ->where('target_id', $request->group_id)
-            ->first();
+        if (!$group->teachers->contains($teacher)) {
+            return $this->errorResponse('لا يمكنك إنشاء قائمة الحلقة لهذه المجموعة', null, 403);
+        }
 
-        if ($existHalaqah) {
+        $existingHalaqah = Halaqah::where([
+            'type' => 'halaqah',
+            'teacher_id' => $teacher->id,
+            'target_type' => Group::class,
+            'target_id' => $request->group_id
+        ])->first();
+
+        if ($existingHalaqah) {
             return $this->errorResponse('تم إضافة قائمة الحلقة من قبل', null, 404);
         }
 
         try {
             DB::beginTransaction();
-            $halaqah = Halaqah::updateOrCreate([
+            $halaqah = Halaqah::create([
                 'type' => 'halaqah',
                 'teacher_id' => $teacher->id,
                 'target_type' => Group::class,
@@ -66,11 +72,17 @@ class HalaqahController extends Controller
                         $wirdDone->halaqah_grade = $halaqahGrade;
                         $wirdDone->save();
                     }
+                    $notifications[] = [
+                        'user_id' => $user->id,
+                        'user_type' => User::class,
+                        'title' => 'تم إضافة درجة الحلقة',
+                        'body' => 'لقد حصلت على تقييم ' . $halaqahGrade . ' من خلال المعلم ' . $teacher->name,
+                    ];
                 }
             }
-
-            // TODO: send notification to group members (if exist)
-
+            foreach ($notifications as $notification) {
+                Notification::create($notification);
+            }
             DB::commit();
             return $this->successResponse($halaqah, 'تم إضافة قائمة الحلقة بنجاح');
         } catch (\Throwable $th) {
