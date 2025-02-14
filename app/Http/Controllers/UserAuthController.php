@@ -242,7 +242,7 @@ class UserAuthController extends Controller
             'old_password' => 'sometimes|string|min:8',
             'password' => 'sometimes|string|min:8|confirmed',
             'phone' => 'sometimes|string|max:15|unique:users,phone',
-            'telegram' => 'sometimes|string|max:255|unique:admins,telegram',
+            'telegram' => 'sometimes|string|max:255|unique:users,telegram',
             'birth_date' => 'sometimes|date',
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -257,11 +257,12 @@ class UserAuthController extends Controller
             $user->telegram = $request->telegram;
         if ($request->has('birth_date'))
             $user->birth_date = $request->birth_date;
-        if ($request->has('old_password') && Hash::check($request->old_password, $user->password)) {
-            if ($request->has('password'))
+        if ($request->has('old_password')) {
+            if (Hash::check($request->old_password, $user->password)) {
                 $user->password = Hash::make($request->password);
-        } else {
-            return $this->errorResponse('كلمة المرور القديمة غير صحيحة', null, 400);
+            } else {
+                return $this->errorResponse('كلمة المرور القديمة غير صحيحة', null, 400);
+            }
         }
 
         if ($request->hasFile('image')) {

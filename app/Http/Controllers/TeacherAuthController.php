@@ -267,15 +267,13 @@ class TeacherAuthController extends Controller
             $teacher->telegram = $request->telegram;
         if ($request->has('birth_date'))
             $teacher->birth_date = $request->birth_date;
-        if ($request->has('old_password') && Hash::check($request->old_password, $teacher->password)) {
-            if ($request->has('password'))
+        if ($request->has('old_password')) {
+            if (Hash::check($request->old_password, $teacher->password)) {
                 $teacher->password = Hash::make($request->password);
-        } else {
-            return $this->errorResponse('كلمة المرور القديمة غير صحيحة', null, 400);
+            } else {
+                return $this->errorResponse('كلمة المرور القديمة غير صحيحة', null, 400);
+            }
         }
-        // if ($request->has('password'))
-        //     $teacher->password = Hash::make($request->password);
-
         if ($request->hasFile('image')) {
             if ($teacher->image) {
                 Storage::delete($teacher->image);

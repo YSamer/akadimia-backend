@@ -84,5 +84,6 @@ Route::prefix('teacher')->group(function () {
 
         // Halaqah
         Route::post('finish-halaqah', [HalaqahController::class, 'finishHalaqah']);
+        Route::post('finish-sard', [HalaqahController::class, 'finishSard']);
     });
 });

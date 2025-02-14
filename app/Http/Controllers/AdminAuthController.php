@@ -249,17 +249,17 @@ class AdminAuthController extends Controller
 
     public function updateProfile(Request $request)
     {
+        $admin = $request->user('admin');
         $request->validate([
             'name' => 'sometimes|string|max:255',
             'old_password' => 'sometimes|string|min:8',
             'password' => 'sometimes|string|min:8|confirmed',
-            'phone' => 'sometimes|string|max:15|unique:admins,phone',
-            'telegram' => 'sometimes|string|max:255|unique:admins,telegram',
+            'phone' => 'sometimes|string|max:15|unique:admins,phone,' . $admin->id,
+            'telegram' => 'sometimes|string|max:255|unique:admins,telegram,' . $admin->id,
             'birth_date' => 'sometimes|date',
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $admin = $request->user('admin');
 
         if ($request->has('name'))
             $admin->name = $request->name;
@@ -269,11 +269,12 @@ class AdminAuthController extends Controller
             $admin->telegram = $request->telegram;
         if ($request->has('birth_date'))
             $admin->birth_date = $request->birth_date;
-        if ($request->has('old_password') && Hash::check($request->old_password, $admin->password)) {
-            if ($request->has('password'))
+        if ($request->has('old_password')) {
+            if (Hash::check($request->old_password, $admin->password)) {
                 $admin->password = Hash::make($request->password);
-        } else {
-            return $this->errorResponse('كلمة المرور القديمة غير صحيحة', null, 400);
+            } else {
+                return $this->errorResponse('كلمة المرور القديمة غير صحيحة', null, 400);
+            }
         }
 
         if ($request->hasFile('image')) {

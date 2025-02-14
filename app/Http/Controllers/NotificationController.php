@@ -23,7 +23,7 @@ class NotificationController extends Controller
         $guard = Auth::getDefaultDriver();
         $user = Auth::guard($guard)->user();
 
-        $notifications = $user->allNotifications()->paginate();
+        $notifications = $user->allNotifications()->orderByDesc('created_at')->paginate(50);
 
         return $this->successResponse(NotificationResource::collection($notifications), 'Notifications fetched successfully.');
     }

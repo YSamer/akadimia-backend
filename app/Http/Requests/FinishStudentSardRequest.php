@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FinishGroupHalaqahRequest extends FormRequest
+class FinishStudentSardRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,16 +23,13 @@ class FinishGroupHalaqahRequest extends FormRequest
     {
         $rules = [
             'group_id' => 'required|exists:groups,id',
+            'user_id' => 'required|exists:users,id',
             'date' => 'required|date|date_format:Y-m-d',
             'duration_hours' => 'required|integer|min:0|max:24',
             'duration_minutes' => 'required|integer|min:0|max:59',
+            'grade' => 'required|numeric|min:0|max:5',
+            'comment' => 'nullable|string|max:255',
         ];
-
-        foreach ($this->request->all() as $key => $value) {
-            if (preg_match('/^user_(\d+)$/', $key, $matches)) {
-                $rules[$key] = 'required|numeric|min:0|max:10';
-            }
-        }
 
         return $rules;
     }

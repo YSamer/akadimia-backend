@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\GroupConfig;
+use App\Models\UserWirdsDone;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,7 +18,8 @@ class GroupWirdResource extends JsonResource
     {
         $groupConfig = GroupConfig::where('group_id', $this->group_id)->first();
 
-        return [
+
+        $data = [
             'id' => $this->id,
             'group_id' => $this->group_id,
             'date' => $this->date,
@@ -34,5 +36,14 @@ class GroupWirdResource extends JsonResource
             'sard_shikh_confing' => $groupConfig->sard_shikh,
             'sard_rafiq_confing' => $groupConfig->sard_rafiq,
         ];
+        if (auth('user')->check()) {
+            $data['user_wird_done'] = new UserWirdsDoneResource(UserWirdsDone::where([
+                'group_id' => $this->group_id,
+                'user_id' => auth('user')->user()->id,
+                'date' => $this->date,
+            ])->first());
+        }
+
+        return $data;
     }
 }

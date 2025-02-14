@@ -21,6 +21,7 @@ class GroupController extends Controller
         $user = Auth::user();
         if (auth('user')->check()) {
             $groups = $user->groups()->with('batch')->paginate(10);
+            return $this->successResponse(GroupResource::collection($groups));
         } else if (auth('teacher')->check()) {
             $groups = $user->groups()->with('batch')->paginate(10);
         } else if (auth('admin')->check()) {
@@ -28,7 +29,7 @@ class GroupController extends Controller
         } else {
             return $this->errorResponse('Unauthenticated', null, 401);
         }
-        return $this->successResponse(GroupResource::collection($groups));
+        return $this->successResponse(GroupResource::collection($groups)->response()->getData());
     }
 
     public function indexAll()

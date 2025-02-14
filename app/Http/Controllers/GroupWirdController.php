@@ -109,7 +109,8 @@ class GroupWirdController extends Controller
         if (!$groupWirdToday) {
             return $this->errorResponse('لا يوجد أوراد اليوم لهذه المجموعة', 404);
         }
-        return $this->errorResponse('تم تنزيل أوراد اليوم من قبل', new GroupWirdResource($groupWirdToday), 404);
+
+        return $this->successResponse(new GroupWirdResource($groupWirdToday), 'أوراد اليوم');
     }
 
     /**
